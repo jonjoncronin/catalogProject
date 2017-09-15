@@ -34,16 +34,17 @@
 	<div class="primary__content">
 		<!-- Main Content -->
 		<section class="content">
-			<form action="#" method = "POST">
-				<label for="name">Name:</label>
-				<input type ="text" required class="form-control" maxlength="100" name="name">
+			<form name="thisform" action="#" method="POST">
+				<label for="name">Name:</label><br>
+				<input type ="text" required class="form-control" maxlength="100" name="name"><br>
 
-				<label for="category">Category:</label>
-				<input type ="text" required class="form-control" maxlength="100" name="category">
+				<label for="category">Category:</label><br>
+				<input type ="text" required class="form-control" maxlength="100" name="category"><br>
 
-				<label for="description">Description:</label>
-				<textarea required class="form-control" maxlength="250" rows="3" name="description" placeholder="Description of the item"></textarea>
-				<button type="submit" id="submit" name="submit">Create</button>
+				<label for="description">Description:</label><br>
+				<textarea required class="form-control" maxlength="250" rows="3" name="description" placeholder="Description of the item"></textarea><br>
+				<!-- <button type="submit" id="submit" name="submit">Create</button> -->
+				<span onclick="thisform.submit()" class="addBtn">Add</span>
 			</form>
 		</section>
 	</div>
