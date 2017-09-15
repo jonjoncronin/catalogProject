@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Catalog App - Removing {{item.name}}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1" />
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa"
+	      rel="stylesheet">
+	<link rel="stylesheet"
+	      href="{{url_for('static', filename='css/main.css')}}" />
+</head>
+
+<body>
+
+	<!-- Header -->
+	<header class="header">
+		<h1>Catalog APP - Delete Item {{item.name}} - {{item.category}}</h1>
+	</header>
+	<!-- Main -->
+	<main>
+		<!-- Main Content -->
+		<section class="content">
+			<h1>Are you sure you want to delete {{item.name}} from the catalog?</h1>
+			<form action="#" method = "POST">
+				<button type="submit" id="submit" name="submit" value="True">Confirm</button>
+				<a href={{url_for('showItems')}}>Cancel</a>
+			</form>
+		</section>
+	</main>
+	<!-- Footer -->
+	<div id="footer">
+	</div>
+</body>
+
+</html>

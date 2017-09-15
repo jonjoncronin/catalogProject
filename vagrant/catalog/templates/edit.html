@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Catalog App - Edit Item {{item.name}}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1" />
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa"
+	      rel="stylesheet">
+	<link rel="stylesheet"
+	      href="{{url_for('static', filename='css/main.css')}}" />
+</head>
+
+<body>
+
+	<!-- Header -->
+	<header class="header">
+		<h1>Catalog APP - Edit Item {{item.name}} - {{item.category}}</h1>
+	</header>
+	<!-- Main -->
+	<main>
+		<!-- Main Content -->
+		<section class="content">
+			<form action="#" method = "POST">
+				<label for="name">Name: {{item.name}}</label>
+
+				<label for="category">Category:</label>
+				<input type ="text" required class="form-control" maxlength="100" name="category" placeholder="{{item.category}}">
+
+				<label for="description">Description:</label>
+				<textarea required class="form-control" maxlength="250" rows="3" name="description" placeholder="{{item.description}}"></textarea>
+				<button type="submit" id="submit" name="submit">Create</button>
+			</form>
+		</section>
+	</main>
+	<!-- Footer -->
+	<div id="footer">
+	</div>
+</body>
+
+</html>

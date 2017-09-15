@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Catalog App - Items for {{targetCategory.name}}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1" />
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa"
+	      rel="stylesheet">
+	<link rel="stylesheet"
+	      href="{{url_for('static', filename='css/main.css')}}" />
+</head>
+
+<body>
+<main>
+	<!-- Header -->
+	<header class="header">
+		<h1>Catalog APP - Items for {{targetCategory.name}}</h1>
+	</header>
+
+	<!-- Side Menu -->
+	<div class="side__menu">
+		<nav>
+		<li><a href="{{url_for('showItems')}}">home</a>
+		{% if categories %}
+		{% for entry in categories %}
+      {% if entry.id == targetCategory.id %}
+      <li class="active"><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+      {% else %}
+		<li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+      {% endif %}
+		{% endfor %}
+		{% endif %}
+		</nav>
+	</div>
+	<!-- Main -->
+	<div class="primary__content">
+		<!-- Main Content -->
+		<a href={{url_for('newItem')}}>Add a new item</a>
+		<section class="content">
+			{% if not items %}
+			<p>No Items</p>
+			{% else %}
+         <ul>
+         {% for item in items %}
+            <li>{{item.name}}</li>
+         {% endfor %}
+         </ul>
+			{% endif %}
+		</section>
+	</div>
+	<!-- Footer -->
+	<div id="footer">
+	</div>
+	<main>
+</body>
+
+</html>
