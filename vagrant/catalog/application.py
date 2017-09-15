@@ -1,4 +1,15 @@
 #!/usr/local/bin/python3
+"""
+application.py -
+This module is a standalone module intended to act as a webserver hosting
+the site for a Catalog Item App.
+This Catalog Item App is intended to allow users to maintain a list of items
+that fall under a variety of categories. Both the item and the category it falls
+under are user specified.
+Currently an item is unique even if it falls under different categories - ie
+you CANNOT have a ball under the category of baseball and a ball under the
+category of soccer.
+"""
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, g
 from flask import session as login_session
 from flask import make_response
@@ -8,6 +19,9 @@ from models import Base, Item, Category
 
 import httplib2
 
+"""
+Create the connections and sessions to the catalog database
+"""
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -15,16 +29,23 @@ session = DBSession()
 
 app = Flask(__name__)
 
-
 @app.route('/')
 @app.route('/catalog/')
 def showItems():
+    """
+    routes to showItems will render the initial home page that show all the
+    items in the database and the categories they fall under.
+    """
     categories = session.query(Category).order_by(Category.name).all()
     items = session.query(Item).order_by(Item.name)
     return render_template('items.html', items=items, categories=categories)
 
 @app.route('/catalog/category/<int:category_id>/')
 def showItemsForCategory(category_id):
+    """
+    route to showItemsForCategory will render a page that shows the items
+    associated with a specific category.
+    """
     categories = session.query(Category).order_by(Category.name).all()
     targetCategory = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id).order_by(Item.name)
@@ -32,6 +53,10 @@ def showItemsForCategory(category_id):
 
 @app.route('/catalog/JSON')
 def allItemsByAllCategoryJSON():
+    """
+    route to allItemsByAllCatagoryJSON will dump all the items in the database
+    in JSON format ordered in a format that shows items per category.
+    """
     categories = session.query(Category).order_by(Category.name).all()
     cate_dict = [entry.serialize for entry in categories]
     index = 0
@@ -44,16 +69,28 @@ def allItemsByAllCategoryJSON():
 
 @app.route('/catalog/item/<int:item_id>/JSON')
 def itemDetailsJSON(item_id):
+    """
+    route to itemDetailsJSON will dump all the details about a specific item in
+    JSON format.
+    """
     item = session.query(Item).filter_by(id=item_id).one()
     return jsonify(Item=item.serialize)
 
 @app.route('/catalog/category/JSON')
 def allCategoriesJSON():
+    """
+    route to allCatagoriesJSON will dump all the categories in the database
+    in JSON format ordered by name.
+    """
     categories = session.query(Category).order_by(Category.name).all()
     return jsonify(Category=[entry.serialize for entry in categories])
 
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newItem():
+    """
+    route to newItem will render a page to allow a user to create a new item
+    through a web form and store it in the database.
+    """
     if request.method == 'POST':
         print(request.form)
         if request.form['name']:
@@ -109,6 +146,11 @@ def newItem():
 
 @app.route('/catalog/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(item_id):
+    """
+    route to editItem will render a page to allow a user to edit a specific
+    items category and/or description. Changing the name is NOT allowed and you
+    MUST delete an entry if you want one with a different name.
+    """
     editedItem = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         print("attempting to edit an item")
@@ -133,6 +175,10 @@ def editItem(item_id):
 
 @app.route('/catalog/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(item_id):
+    """
+    route to deleteItem will render a page to prompt the user for confirmation
+    that an item is to be deleted and performs the delete if confirmed.
+    """
     item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         print(request.form)
