@@ -85,7 +85,7 @@ def allCategoriesJSON():
     categories = session.query(Category).order_by(Category.name).all()
     return jsonify(Category=[entry.serialize for entry in categories])
 
-@app.route('/catalog/new/', methods=['GET', 'POST'])
+@app.route('/catalog/item/new/', methods=['GET', 'POST'])
 def newItem():
     """
     route to newItem will render a page to allow a user to create a new item

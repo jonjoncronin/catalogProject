@@ -18,8 +18,20 @@
 	<header class="header">
 		<h1>Catalog APP - Add new Item </h1>
 	</header>
+   <!-- Side Menu -->
+	<div class="side__menu">
+		<nav>
+		<li><a href="{{url_for('showItems')}}">home</a>
+		{% if categories %}
+		{% for entry in categories %}
+		<li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+		{% endfor %}
+		{% endif %}
+		</nav>
+	</div>
+
 	<!-- Main -->
-	<main>
+	<div class="primary__content">
 		<!-- Main Content -->
 		<section class="content">
 			<form action="#" method = "POST">
@@ -34,7 +46,7 @@
 				<button type="submit" id="submit" name="submit">Create</button>
 			</form>
 		</section>
-	</main>
+	</div>
 	<!-- Footer -->
 	<div id="footer">
 	</div>
