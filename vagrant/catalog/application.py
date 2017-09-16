@@ -92,6 +92,7 @@ def newItem():
     route to newItem will render a page to allow a user to create a new item
     through a web form and store it in the database.
     """
+    categories = session.query(Category).order_by(Category.name).all()
     if request.method == 'POST':
         print(request.form)
         if request.form['name']:
@@ -141,7 +142,7 @@ def newItem():
                     request.form['name'], existingItem.category))
         return redirect(url_for('showItems'))
     else:
-        return render_template('new.html')
+        return render_template('new.html', categories=categories)
 
 
 @app.route('/catalog/item/<int:item_id>/edit', methods=['GET', 'POST'])
@@ -151,6 +152,7 @@ def editItem(item_id):
     items category and/or description. Due to the table dependencies an edit
     will be processed as an delete->add action.
     """
+    categories = session.query(Category).order_by(Category.name).all()
     editedItem = session.query(Item).filter_by(id=item_id).one()
     item_name = editedItem.name
     if request.method == 'POST':
@@ -205,7 +207,7 @@ def editItem(item_id):
                 item_name, existingItem.category))
         return redirect(url_for('showItems'))
     else:
-        return render_template('edit.html', item=editedItem)
+        return render_template('edit.html', item=editedItem, categories=categories)
 
 @app.route('/catalog/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(item_id):
@@ -213,6 +215,7 @@ def deleteItem(item_id):
     route to deleteItem will render a page to prompt the user for confirmation
     that an item is to be deleted and performs the delete if confirmed.
     """
+    categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         print(request.form)
@@ -226,7 +229,7 @@ def deleteItem(item_id):
                 pass
         return redirect(url_for('showItems'))
     else:
-        return render_template('delete.html', item=item)
+        return render_template('delete.html', item=item, categories=categories)
 
 if __name__ == '__main__':
     app.debug = True

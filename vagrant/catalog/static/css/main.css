@@ -83,6 +83,7 @@ main {
 /* Style the "Add" button */
 .addBtn {
     padding: 10px;
+    margin-right: 5px;
     width: 25%;
     background: #d9d9d9;
     color: #555;
