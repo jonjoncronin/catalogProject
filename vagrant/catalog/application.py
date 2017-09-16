@@ -40,6 +40,7 @@ def showItems():
     items = session.query(Item).order_by(Item.name)
     return render_template('items.html', items=items, categories=categories)
 
+# @app.route('/catalog/category/<string:category_name>/')
 @app.route('/catalog/category/<int:category_id>/')
 def showItemsForCategory(category_id):
     """
@@ -62,8 +63,8 @@ def allItemsByAllCategoryJSON():
     index = 0
     for entry in cate_dict:
         items = session.query(Item).filter_by(category_id = entry['id']).order_by(Item.name).all()
-        items_dict = [item.serialize for item in items]
-        cate_dict[index]["Item"] = items_dict
+        items_dict = {'Item': [item.serialize for item in items]}
+        cate_dict[index].update(items_dict)
         index+=1
     return jsonify(Category=cate_dict)
 
@@ -119,20 +120,19 @@ def newItem():
                         # id for the item -> category relationship.
                         # SqlAlchemy is smart enough to not need that commit
                         # call.
-                        # session.commit
+                        # session.commit()
                         existingCategory = session.query(Category).filter_by(
                                             name=request.form['category']).one()
                     except:
                         print("Unable to add {0} category to the DB".format(newCategory))
                         return redirect(url_for('showItems'))
 
-                categoryId = existingCategory.id
                 newItem = Item(name=request.form['name'],
                                description=request.form['description'],
-                               category_id=categoryId)
+                               category_id=existingCategory.id)
                 try:
                     session.add(newItem)
-                    session.commit
+                    session.commit()
                 except:
                     print("Unable to add {0} item to the DB".format(newItem))
                     pass
@@ -148,27 +148,61 @@ def newItem():
 def editItem(item_id):
     """
     route to editItem will render a page to allow a user to edit a specific
-    items category and/or description. Changing the name is NOT allowed and you
-    MUST delete an entry if you want one with a different name.
+    items category and/or description. Due to the table dependencies an edit
+    will be processed as an delete->add action.
     """
     editedItem = session.query(Item).filter_by(id=item_id).one()
+    item_name = editedItem.name
     if request.method == 'POST':
         print("attempting to edit an item")
-        # Flask doesn't like it if we check form input and it has no value.
-        # See the editRestaurant.html template for the save_button <button>
-        # object and notice that we set a value of "True".
         print(request.form)
-        if request.form['category'] and request.form['category'] is not editedItem.category:
-            #print("attempting to edit item category")
-            editedItem.category = request.form['category']
-        if request.form['description'] and request.form['description'] is not editedItem.description:
-            editedItem.description = request.form['description']
+        session.delete(editedItem)
+        session.commit()
+        print("attempting to add item")
         try:
-            session.add(editedItem)
-            session.commit
+            existingItem = session.query(Item).filter_by(
+                name=item_name).one()
+            print(existingItem)
         except:
-            print("Unable to add {0} to the DB".format(editedItem))
+            existingItem = ""
             pass
+        if not existingItem:
+            try:
+                existingCategory = session.query(Category).filter_by(
+                    name=request.form['category']).one()
+                print(existingCategory)
+            except:
+                existingCategory = ""
+                pass
+            if not existingCategory:
+                newCategory = Category(name=request.form['category'])
+                print(newCategory)
+                try:
+                    session.add(newCategory)
+                    # You think you need to commit this new category
+                    # before adding the item because you need the unique
+                    # id for the item -> category relationship.
+                    # SqlAlchemy is smart enough to not need that commit
+                    # call.
+                    # session.commit()
+                    existingCategory = session.query(Category).filter_by(
+                                        name=request.form['category']).one()
+                except:
+                    print("Unable to add {0} category to the DB".format(newCategory))
+                    return redirect(url_for('showItems'))
+
+            newItem = Item(name=item_name,
+                           description=request.form['description'],
+                           category_id=existingCategory.id)
+            try:
+                session.add(newItem)
+                session.commit()
+            except:
+                print("Unable to add {0} item to the DB".format(newItem))
+                pass
+        else:
+            print("{0} already exists with category {1}".format(
+                item_name, existingItem.category))
         return redirect(url_for('showItems'))
     else:
         return render_template('edit.html', item=editedItem)
@@ -186,7 +220,7 @@ def deleteItem(item_id):
             print("attempting to delete an item")
             try:
                 session.delete(item)
-                session.commit
+                session.commit()
             except:
                 print("Unable to delete {0} from the DB".format(item))
                 pass
