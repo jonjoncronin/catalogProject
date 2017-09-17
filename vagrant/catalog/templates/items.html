@@ -49,6 +49,10 @@
                               {% else %}
                                {% for item in items %}
                               <button class="accordion">{{item.name}}</button>
+                              <span class=mgmt__menu>
+                                    <a href=#><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                    <a href=#><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                              </span>
                               <div class="panel">
                                     Description:
                                     <div style="float:right;font-size:smaller">({{item.category.name}})</div><br> {{item.description}}

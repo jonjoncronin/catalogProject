@@ -39,7 +39,7 @@ main {
 }
 
 .side__menu {
-   width: 120px;
+   width: 20%;
    float: left;
    margin: 0;
    padding: 0;
@@ -82,7 +82,8 @@ main {
 
 .primary__content {
    float: left;
-   min-width: 220px;
+   width: 80%;
+   padding-top: 5px;
 }
 
 .primary__content ul {
@@ -91,7 +92,15 @@ main {
    padding: 0;
 }
 
+.content__right {
+   width: 10%;
+   float: right;
+   text-align: right;
+}
 
+.content {
+   width: 88%;
+}
 /* Style the "Add" button */
 
 .addBtn {
