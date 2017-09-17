@@ -37,12 +37,14 @@ main {
    padding-bottom: 0;
    margin-bottom: 0;
 }
+
 .side__menu {
    width: 120px;
    float: left;
    margin: 0;
    padding: 0;
 }
+
 .side__menu nav {
    box-sizing: border-box;
    float: left;
@@ -51,26 +53,35 @@ main {
    padding: 0;
    background-color: #f1f1f1;
 }
+
 .side__menu li a {
-    display: block;
-    color: #000;
-    padding: 8px 16px;
-    text-decoration: none;
+   display: block;
+   color: #000;
+   padding: 8px 16px;
+   text-decoration: none;
 }
 
+
 /* Change the link color on hover */
+
+.side__menu li:hover {
+   background-color: #555;
+   color: white;
+   transition: 0.4s;
+}
+
 .side__menu li a:hover {
-    background-color: #555;
-    color: white;
+   color: white;
+   transition: 0.4s;
 }
 
 .side__menu .active {
-    background-color: #5c7ca8;
-    color: white;
+   background-color: #5c7ca8;
+   color: white;
 }
 
 .primary__content {
-   float:left;
+   float: left;
    min-width: 220px;
 }
 
@@ -80,45 +91,47 @@ main {
    padding: 0;
 }
 
+
 /* Style the "Add" button */
+
 .addBtn {
-    padding: 10px;
-    margin-right: 5px;
-    width: 25%;
-    background: #d9d9d9;
-    color: #555;
-    float: left;
-    text-align: center;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+   padding: 10px;
+   margin-right: 5px;
+   width: 25%;
+   background: #d9d9d9;
+   color: #555;
+   float: left;
+   text-align: center;
+   font-size: 16px;
+   cursor: pointer;
+   transition: 0.4s;
 }
 
 .addBtn:hover {
-    background-color: #bbb;
+   background-color: #bbb;
 }
 
 button.accordion {
-    background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.4s;
+   background-color: #eee;
+   color: #444;
+   cursor: pointer;
+   padding: 18px;
+   width: 100%;
+   border: none;
+   text-align: left;
+   outline: none;
+   font-size: 15px;
+   transition: 0.4s;
 }
 
 button.accordion.active, button.accordion:hover {
-    background-color: #ddd;
+   background-color: #ddd;
 }
 
 div.panel {
-    padding: 0 18px;
-    background-color: white;
-    max-height: 0px;
-    overflow: hidden;
-    transition: max-height 0.2s ease-out;
+   padding: 0 18px;
+   background-color: white;
+   max-height: 0px;
+   overflow: hidden;
+   transition: max-height 0.2s ease-out;
 }

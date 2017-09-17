@@ -2,53 +2,65 @@
 <html>
 
 <head>
-	<title>Catalog App - Edit Item {{item.name}}</title>
-	<meta charset="utf-8" />
-	<meta name="viewport"
-	      content="width=device-width, initial-scale=1" />
-	<link href="https://fonts.googleapis.com/css?family=Comfortaa"
-	      rel="stylesheet">
-	<link rel="stylesheet"
-	      href="{{url_for('static', filename='css/main.css')}}" />
+      <title>Catalog App - Edit Item {{item.name}}</title>
+      <meta charset="utf-8" />
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1" />
+      <link href="https://fonts.googleapis.com/css?family=Comfortaa"
+            rel="stylesheet">
+      <link rel="stylesheet"
+            href="{{url_for('static', filename='css/main.css')}}" />
 </head>
 
 <body>
 
-	<!-- Header -->
-	<header class="header">
-		<h1>Catalog APP</h1>
-		<hr>
-	</header>
-   <!-- Side Menu -->
-   <div class="side__menu">
-      <nav>
-      <li><a href="{{url_for('showItems')}}">home</a>
-      {% if categories %}
-      {% for entry in categories %}
-      <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
-      {% endfor %}
-      {% endif %}
-      </nav>
-   </div>
-	<!-- Main -->
-		<div class="primary__content">
-		<!-- Main Content -->
-		<section class="content">
-			<form action="#" method = "POST">
-				<label for="name">Name: {{item.name}}</label>
+      <!-- Header -->
+      <header class="header">
+            <h1>Catalog APP</h1>
+            <hr>
+      </header>
+      <!-- Side Menu -->
+      <div class="side__menu">
+            <nav>
+                  <li><a href="{{url_for('showItems')}}">home</a>
+                        {% if categories %}
+                         {% for entry in categories %}
+                        <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+                         {% endfor %}
+                        {% endif %}
+            </nav>
+      </div>
+      <!-- Main -->
+      <div class="primary__content">
+            <!-- Main Content -->
+            <section class="content">
+                  <form action="#"
+                        method="POST">
+                        <label for="name">Name: {{item.name}}</label>
 
-				<label for="category">Category:</label>
-				<input type ="text" required class="form-control" maxlength="100" name="category" placeholder="{{item.category}}">
+                        <label for="category">Category:</label>
+                        <input type="text"
+                               required
+                               class="form-control"
+                               maxlength="100"
+                               name="category"
+                               placeholder="{{item.category}}">
 
-				<label for="description">Description:</label>
-				<textarea required class="form-control" maxlength="250" rows="3" name="description" placeholder="{{item.description}}"></textarea>
-				<span onclick="thisform.submit()" class="addBtn">Edit</span>
-			</form>
-		</section>
-	</div>
-	<!-- Footer -->
-	<div id="footer">
-	</div>
+                        <label for="description">Description:</label>
+                        <textarea required
+                                  class="form-control"
+                                  maxlength="250"
+                                  rows="3"
+                                  name="description"
+                                  placeholder="{{item.description}}"></textarea>
+                        <span onclick="thisform.submit()"
+                              class="addBtn">Edit</span>
+                  </form>
+            </section>
+      </div>
+      <!-- Footer -->
+      <div id="footer">
+      </div>
 </body>
 
 </html>

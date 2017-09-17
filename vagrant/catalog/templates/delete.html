@@ -2,48 +2,53 @@
 <html>
 
 <head>
-	<title>Catalog App - Removing {{item.name}}</title>
-	<meta charset="utf-8" />
-	<meta name="viewport"
-	      content="width=device-width, initial-scale=1" />
-	<link href="https://fonts.googleapis.com/css?family=Comfortaa"
-	      rel="stylesheet">
-	<link rel="stylesheet"
-	      href="{{url_for('static', filename='css/main.css')}}" />
+      <title>Catalog App - Removing {{item.name}}</title>
+      <meta charset="utf-8" />
+      <meta name="viewport"
+            content="width=device-width, initial-scale=1" />
+      <link href="https://fonts.googleapis.com/css?family=Comfortaa"
+            rel="stylesheet">
+      <link rel="stylesheet"
+            href="{{url_for('static', filename='css/main.css')}}" />
 </head>
 
 <body>
 
-	<!-- Header -->
-	<header class="header">
-		<h1>Catalog APP</h1>
-		<hr>
-	</header>
-   <!-- Side Menu -->
-   <div class="side__menu">
-      <nav>
-      <li><a href="{{url_for('showItems')}}">home</a>
-      {% if categories %}
-      {% for entry in categories %}
-      <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
-      {% endfor %}
-      {% endif %}
-      </nav>
-   </div>
-	<!-- Main -->
-	<div class="primary__content">
-		<!-- Main Content -->
-		<section class="content">
-			<h1>Are you sure you want to delete {{item.name}} from the catalog?</h1>
-			<form action="#" method = "POST">
-				<div onclick="thisform.submit()" class="addBtn">Confirm</div>&nbsp;
-				<a href={{url_for('showItems')}}><div class="addBtn">Cancel</div></a>
-			</form>
-		</section>
-	</div>
-	<!-- Footer -->
-	<div id="footer">
-	</div>
+      <!-- Header -->
+      <header class="header">
+            <h1>Catalog APP</h1>
+            <hr>
+      </header>
+      <!-- Side Menu -->
+      <div class="side__menu">
+            <nav>
+                  <li><a href="{{url_for('showItems')}}">home</a>
+                  {% if categories %}
+                   {% for entry in categories %}
+                  <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+                   {% endfor %}
+                  {% endif %}
+            </nav>
+      </div>
+      <!-- Main -->
+      <div class="primary__content">
+            <!-- Main Content -->
+            <section class="content">
+                  <h1>Are you sure you want to delete {{item.name}} from the catalog?</h1>
+                  <form action="#"
+                        method="POST">
+                        <div onclick="thisform.submit()"
+                             class="addBtn">Confirm</div>&nbsp;
+                        <a href={{url_for(
+                           'showItems')}}>
+                              <div class="addBtn">Cancel</div>
+                        </a>
+                  </form>
+            </section>
+      </div>
+      <!-- Footer -->
+      <div id="footer">
+      </div>
 </body>
 
 </html>
