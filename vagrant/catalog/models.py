@@ -8,6 +8,7 @@ import string
 
 Base = declarative_base()
 
+
 class Category(Base):
     __tablename__ = 'Category'
     id = Column(Integer, primary_key=True)
@@ -39,6 +40,7 @@ class Item(Base):
             'id': self.id,
             'title': self.name,
         }
+
 
 engine = create_engine('sqlite:///catalog.db')
 

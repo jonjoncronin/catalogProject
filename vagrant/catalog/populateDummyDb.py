@@ -18,22 +18,22 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 itemsList = (
-   {'category': 'kitchen',
-    'items':(
-      {'name': 'fork', 'description':''},
-      {'name': 'knife', 'description':''},
-      {'name': 'spoon', 'description':''},
-      {'name': 'plate', 'description':''},
-      {'name': 'bowl', 'description':''})
-   },
-   {'category': 'bathroom',
-    'items':(
-      {'name':'toothbrush', 'description':''},
-      {'name':'toothpaste', 'description':''},
-      {'name':'floss', 'description':''},
-      {'name':'razor', 'description':''},
-      {'name':'hairbrush', 'description':''})
-   }
+    {'category': 'kitchen',
+     'items': (
+         {'name': 'fork', 'description': ''},
+         {'name': 'knife', 'description': ''},
+         {'name': 'spoon', 'description': ''},
+         {'name': 'plate', 'description': ''},
+         {'name': 'bowl', 'description': ''})
+     },
+    {'category': 'bathroom',
+        'items': (
+            {'name': 'toothbrush', 'description': ''},
+            {'name': 'toothpaste', 'description': ''},
+            {'name': 'floss', 'description': ''},
+            {'name': 'razor', 'description': ''},
+            {'name': 'hairbrush', 'description': ''})
+     }
 )
 
 # Create dummy items
@@ -44,7 +44,8 @@ for category in itemsList:
     newCat = session.query(Category).filter_by(name=someCategory.name).one()
     print("New Category {0}\n".format(category))
     for item in category['items']:
-        someItem = Item(name=item['name'],description=item['description'],category_id=newCat.id)
+        someItem = Item(
+            name=item['name'], description=item['description'], category_id=newCat.id)
         session.add(someItem)
         print("added {0}\n".format(item))
     print("=======================\n")

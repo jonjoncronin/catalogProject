@@ -29,6 +29,7 @@ session = DBSession()
 
 app = Flask(__name__)
 
+
 @app.route('/')
 @app.route('/catalog/')
 def showItems():
@@ -41,6 +42,8 @@ def showItems():
     return render_template('items.html', items=items, categories=categories)
 
 # @app.route('/catalog/category/<string:category_name>/')
+
+
 @app.route('/catalog/category/<int:category_id>/')
 def showItemsForCategory(category_id):
     """
@@ -49,8 +52,10 @@ def showItemsForCategory(category_id):
     """
     categories = session.query(Category).order_by(Category.name).all()
     targetCategory = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(Item).filter_by(category_id=category_id).order_by(Item.name)
+    items = session.query(Item).filter_by(
+        category_id=category_id).order_by(Item.name)
     return render_template('categoryItems.html', items=items, categories=categories, targetCategory=targetCategory)
+
 
 @app.route('/catalog/JSON')
 def allItemsByAllCategoryJSON():
@@ -62,11 +67,13 @@ def allItemsByAllCategoryJSON():
     cate_dict = [entry.serialize for entry in categories]
     index = 0
     for entry in cate_dict:
-        items = session.query(Item).filter_by(category_id = entry['id']).order_by(Item.name).all()
+        items = session.query(Item).filter_by(
+            category_id=entry['id']).order_by(Item.name).all()
         items_dict = {'Item': [item.serialize for item in items]}
         cate_dict[index].update(items_dict)
-        index+=1
+        index += 1
     return jsonify(Category=cate_dict)
+
 
 @app.route('/catalog/item/<int:item_id>/JSON')
 def itemDetailsJSON(item_id):
@@ -77,6 +84,7 @@ def itemDetailsJSON(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
     return jsonify(Item=item.serialize)
 
+
 @app.route('/catalog/category/JSON')
 def allCategoriesJSON():
     """
@@ -85,6 +93,7 @@ def allCategoriesJSON():
     """
     categories = session.query(Category).order_by(Category.name).all()
     return jsonify(Category=[entry.serialize for entry in categories])
+
 
 @app.route('/catalog/item/new/', methods=['GET', 'POST'])
 def newItem():
@@ -123,9 +132,10 @@ def newItem():
                         # call.
                         # session.commit()
                         existingCategory = session.query(Category).filter_by(
-                                            name=request.form['category']).one()
+                            name=request.form['category']).one()
                     except:
-                        print("Unable to add {0} category to the DB".format(newCategory))
+                        print("Unable to add {0} category to the DB".format(
+                            newCategory))
                         return redirect(url_for('showItems'))
 
                 newItem = Item(name=request.form['name'],
@@ -188,9 +198,10 @@ def editItem(item_id):
                     # call.
                     # session.commit()
                     existingCategory = session.query(Category).filter_by(
-                                        name=request.form['category']).one()
+                        name=request.form['category']).one()
                 except:
-                    print("Unable to add {0} category to the DB".format(newCategory))
+                    print("Unable to add {0} category to the DB".format(
+                        newCategory))
                     return redirect(url_for('showItems'))
 
             newItem = Item(name=item_name,
@@ -208,6 +219,7 @@ def editItem(item_id):
         return redirect(url_for('showItems'))
     else:
         return render_template('edit.html', item=editedItem, categories=categories)
+
 
 @app.route('/catalog/item/<int:item_id>/delete', methods=['GET', 'POST'])
 def deleteItem(item_id):
@@ -230,6 +242,7 @@ def deleteItem(item_id):
         return redirect(url_for('showItems'))
     else:
         return render_template('delete.html', item=item, categories=categories)
+
 
 if __name__ == '__main__':
     app.debug = True
