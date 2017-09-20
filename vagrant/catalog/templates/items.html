@@ -57,7 +57,8 @@
                               </span>
                               <div class="panel">
                                     Description:
-                                    <div class="panel__category">({{item.category.name}})</div><br> {{item.description}}
+                                    <span class="panel__category">({{item.category.name}})</span><br> 
+                                    {{item.description}}
                               </div>
                                {% endfor %}
                               {% endif %}
@@ -75,7 +76,7 @@
             for (i = 0; i < acc.length; i++) {
                   acc[i].onclick = function() {
                         this.classList.toggle("active");
-                        var panel = this.nextElementSibling;
+                        var panel = this.nextElementSibling.nextElementSibling;
                         if (panel.style.maxHeight) {
                               panel.style.maxHeight = null;
                         } else {
