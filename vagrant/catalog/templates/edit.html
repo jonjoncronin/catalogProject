@@ -42,23 +42,23 @@
                         <section class="content">
                            <form action="#"
                                  method="POST">
-                                 <label for="name">Name: {{item.name}}</label>
+                                 <label for="name">Name: {{item.name}}</label><br>
 
-                                 <label for="category">Category:</label>
+                                 <label for="category">Category:</label><br>
                                  <input type="text"
                                         required
                                         class="form-control"
                                         maxlength="100"
                                         name="category"
-                                        placeholder="{{item.category}}">
+                                        placeholder="{{item.category.name}}"><br>
 
-                                 <label for="description">Description:</label>
+                                 <label for="description">Description:</label><br>
                                  <textarea required
                                            class="form-control"
                                            maxlength="250"
                                            rows="3"
                                            name="description"
-                                           placeholder="{{item.description}}"></textarea>
+                                           placeholder="{{item.description}}"></textarea><br>
                                  <span onclick="thisform.submit()"
                                        class="addBtn">Edit</span>
                            </form>
