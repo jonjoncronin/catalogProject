@@ -13,7 +13,7 @@ category of soccer.
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, g
 from flask import session as login_session
 from flask import make_response
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from models import Base, Item, Category
 
@@ -168,8 +168,23 @@ def editItem(item_id):
     if request.method == 'POST':
         print("attempting to edit an item")
         print(request.form)
+
+        # remove the previous item and cleanup any empty category
+        category = editedItem.category
         session.delete(editedItem)
+        # now check to see if the category needs to be removed
+        itemsForCat = session.query(Item.id).join(Category).filter_by(name = category.name)
+        count = session.query(func.count(itemsForCat)).scalar()
+        print (count)
+        if count == 0:
+            try:
+                session.delete(category)
+            except:
+                print("Unable to delete {0} from the DB".format(category))
+                pass
         session.commit()
+
+        # add the new item and category if they don't exist
         print("attempting to add item")
         try:
             existingItem = session.query(Item).filter_by(
@@ -229,6 +244,7 @@ def deleteItem(item_id):
     """
     categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
+    category = item.category
     if request.method == 'POST':
         print("attempting to delete an item")
         try:
@@ -237,6 +253,18 @@ def deleteItem(item_id):
         except:
             print("Unable to delete {0} from the DB".format(item))
             pass
+        # now check to see if the category needs to be removed
+        itemsForCat = session.query(Item.id).join(Category).filter_by(name = category.name)
+        count = session.query(func.count(itemsForCat)).scalar()
+        print (count)
+        if count == 0:
+            try:
+                session.delete(category)
+                session.commit()
+            except:
+                print("Unable to delete {0} from the DB".format(category))
+                pass
+
         return redirect(url_for('showItems'))
     else:
         return render_template('delete.html', item=item, categories=categories)
