@@ -41,12 +41,11 @@
 
                         <section class="content">
                            <h1>Are you sure you want to delete {{item.name}} from the catalog?</h1>
-                           <form action="#"
+                           <form name="deleteForm" action="#"
                                  method="POST">
-                                 <div onclick="thisform.submit()"
+                                 <div onclick="document.forms.deleteForm.submit()"
                                      class="addBtn">Confirm</div>&nbsp;
-                                 <a href={{url_for(
-                                    'showItems')}}>
+                                 <a href="{{url_for('showItems')}}">
                                        <div class="addBtn">Cancel</div>
                                  </a>
                            </form>

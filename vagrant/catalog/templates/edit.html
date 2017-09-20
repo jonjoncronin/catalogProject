@@ -40,7 +40,8 @@
                         <!-- Main Content -->
 
                         <section class="content">
-                           <form action="#"
+                           <form name="editForm"
+                                 action="#"
                                  method="POST">
                                  <label for="name">Name: {{item.name}}</label><br>
 
@@ -59,7 +60,7 @@
                                            rows="3"
                                            name="description"
                                            placeholder="{{item.description}}"></textarea><br>
-                                 <span onclick="thisform.submit()"
+                                 <span onclick="document.forms.editForm.submit()"
                                        class="addBtn">Edit</span>
                            </form>
                         </section>

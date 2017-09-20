@@ -230,15 +230,13 @@ def deleteItem(item_id):
     categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
-        print(request.form)
-        if request.form['submit']:
-            print("attempting to delete an item")
-            try:
-                session.delete(item)
-                session.commit()
-            except:
-                print("Unable to delete {0} from the DB".format(item))
-                pass
+        print("attempting to delete an item")
+        try:
+            session.delete(item)
+            session.commit()
+        except:
+            print("Unable to delete {0} from the DB".format(item))
+            pass
         return redirect(url_for('showItems'))
     else:
         return render_template('delete.html', item=item, categories=categories)
