@@ -98,6 +98,14 @@ main {
    text-align: right;
 }
 
+.content__right a {
+   color: black;
+}
+
+.content__right a:visited {
+   color: black;
+}
+
 .content {
    width: 88%;
 }
@@ -125,7 +133,7 @@ button.accordion {
    color: #444;
    cursor: pointer;
    padding: 18px;
-   width: 100%;
+   width: 80%;
    border: none;
    text-align: left;
    outline: none;
@@ -137,10 +145,26 @@ button.accordion.active, button.accordion:hover {
    background-color: #ddd;
 }
 
+.mgmt__menu {
+   width: 20%;
+}
+.mgmt__menu a {
+   color: black;
+}
+
+.mgmt__menu a:visited {
+   color: black;
+}
+
 div.panel {
    padding: 0 18px;
    background-color: white;
    max-height: 0px;
    overflow: hidden;
    transition: max-height 0.2s ease-out;
+}
+
+.panel__category {
+   float:right;
+   font-size:smaller
 }

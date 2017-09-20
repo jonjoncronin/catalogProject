@@ -12,6 +12,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet"
             href="{{url_for('static', filename='css/main.css')}}" />
+
 </head>
 
 <body>
@@ -21,10 +22,11 @@
                   <h1>Catalog APP</h1>
                   <hr>
             </header>
+            <div class="big__div">
 
-            <!-- Side Menu -->
-            <div class="side__menu">
-                  <nav>
+                  <!-- Side Menu -->
+                  <div class="side__menu">
+                     <nav>
                         <li><a href="{{url_for('showItems')}}">home</a>
                         {% if categories %}
                          {% for entry in categories %}
@@ -35,33 +37,40 @@
                           {% endif %}
                          {% endfor %}
                         {% endif %}
-                  </nav>
-            </div>
-            <!-- Main -->
-            <div class="primary__content">
-                  <!-- Main Content -->
-                  <section class="content__right">
-                        <a href={{url_for(
-                           "newItem")}}><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
-                        <!-- <span onclick="location.href='{{url_for("newItem")}}'" class="addBtn">Add</span> -->
-                  </section>
-                  <h3>{{targetCategory.name}} items</h3>
-                  <hr>
-                  <section class="content">
-                        {% if not items %}
-                        <p>No Items</p>
-                        {% else %}
-                         {% for item in items %}
-                        <button class="accordion">{{item.name}}</button>
-                        <div class="panel">
+                        </nav>
+                  </div>
+                  <!-- Main -->
+                  <div class="primary__content">
+                        <!-- Main Content -->
+                        <section class="content__right">
+                              <a href="{{url_for(
+                                 'newItem')}}"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                              <!-- <span onclick="location.href='{{url_for("newItem")}}'" class="addBtn">Add</span> -->
+                        </section>
+                        <section class="content">
+                           <h3>{{targetCategory.name}} items</h3>
+                           <hr>
+                           {% if not items %}
+                           <p>No Items</p>
+                           {% else %}
+                            {% for item in items %}
+                           <button class="accordion">{{item.name}}</button>
+                           <span class=mgmt__menu>
+                                 <a href="{{url_for(
+                                    'editItem', item_id = item.id)}}"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+                                 <a href="{{url_for(
+                                    'deleteItem', item_id = item.id)}}"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+                           </span>
+                           <div class="panel">
                               Description:<br> {{item.description}}
-                        </div>
-                         {% endfor %}
-                        {% endif %}
-                  </section>
-            </div>
-            <!-- Footer -->
-            <div id="footer">
+                           </div>
+                            {% endfor %}
+                           {% endif %}
+                        </section>
+                  </div>
+                  <!-- Footer -->
+                  <div id="footer">
+                  </div>
             </div>
       </main>
       <script>
