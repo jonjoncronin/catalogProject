@@ -44,6 +44,8 @@
                               <!-- <span onclick="location.href='{{url_for("newItem")}}'" class="addBtn">Add</span> -->
                         </section>
                         <section class="content">
+                           <h3>All Items</h3>
+                           <hr>
                               {% if not items %}
                               <p>No Items</p>
                               {% else %}
@@ -57,7 +59,7 @@
                               </span>
                               <div class="panel">
                                     Description:
-                                    <span class="panel__category">({{item.category.name}})</span><br> 
+                                    <span class="panel__category">({{item.category.name}})</span><br>
                                     {{item.description}}
                               </div>
                                {% endfor %}
