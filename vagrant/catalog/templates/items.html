@@ -22,6 +22,15 @@
                   <h1>Catalog APP</h1>
                   <hr>
                   <div class="sub__header">
+                     <div class=sub__header_lt>
+                        {% with messages = get_flashed_messages() %}
+                         {% if messages %}
+                          {% for message in messages %}
+                        <strong> {{ message }} </strong>
+                          {% endfor %}
+                         {% endif %}
+                        {% endwith %}
+                     </div>
                         <div class="sub__header_rt">
                               <a href="{{url_for('showLogin')}}"<span class="addBtn">Login</span></a>
                         </div>

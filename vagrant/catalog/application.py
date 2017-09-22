@@ -146,6 +146,7 @@ def newItem():
                     except:
                         print("Unable to add {0} category to the DB".format(
                             newCategory))
+                        flash("Failed to add item {0}".format(request.form['name']))
                         return redirect(url_for('showItems'))
 
                 newItem = Item(name=request.form['name'],
@@ -156,10 +157,13 @@ def newItem():
                     session.commit()
                 except:
                     print("Unable to add {0} item to the DB".format(newItem))
+                    flash("Failed to add item {0}".format(request.form['name']))
                     pass
             else:
                 print("{0} already exists with category {1}".format(
                     request.form['name'], existingItem.category))
+                flash("Failed to add item {0}".format(request.form['name']))
+        flash("Item {0} added to the catalog".format(request.form['name']))
         return redirect(url_for('showItems'))
     else:
         return render_template('new.html', categories=categories)
@@ -227,6 +231,7 @@ def editItem(item_id):
                 except:
                     print("Unable to add {0} category to the DB".format(
                         newCategory))
+                    flash("Failed to edit item {0}".format(item_name))
                     return redirect(url_for('showItems'))
 
             newItem = Item(name=item_name,
@@ -237,10 +242,13 @@ def editItem(item_id):
                 session.commit()
             except:
                 print("Unable to add {0} item to the DB".format(newItem))
+                flash("Failed to edit item {0}".format(item_name))
                 pass
         else:
             print("{0} already exists with category {1}".format(
                 item_name, existingItem.category))
+            flash("Failed to edit item {0}".format(item_name))
+        flash("Item {0} has been modified".format(item_name))
         return redirect(url_for('showItems'))
     else:
         return render_template('edit.html', item=editedItem, categories=categories)
@@ -254,6 +262,7 @@ def deleteItem(item_id):
     """
     categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
+    item_name = item.name
     category = item.category
     if request.method == 'POST':
         print("attempting to delete an item")
@@ -262,6 +271,7 @@ def deleteItem(item_id):
             session.commit()
         except:
             print("Unable to delete {0} from the DB".format(item))
+            flash("Failed to delete item {0}".format(item_name))
             pass
         # now check to see if the category needs to be removed
         itemsForCat = session.query(Item.id).join(Category).filter_by(name = category.name)
@@ -275,6 +285,7 @@ def deleteItem(item_id):
                 print("Unable to delete {0} from the DB".format(category))
                 pass
 
+        flash("Item {0} has been removed".format(item_name))
         return redirect(url_for('showItems'))
     else:
         return render_template('delete.html', item=item, categories=categories)
@@ -369,6 +380,7 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     print "done!"
+    flash("you are now logged in as %s" % login_session['username'])
     return output
 
 
