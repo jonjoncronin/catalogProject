@@ -30,12 +30,30 @@ main {
    margin-top: 10px;
    padding: 10px;
    text-align: left;
-   height: 100px;
+   /*height: 100px;*/
 }
 
 .header h1 {
    padding-bottom: 0;
    margin-bottom: 0;
+}
+
+.sub__header {
+   overflow:auto;
+}
+
+.sub__header_rt {
+   float:right;
+   width:50%;
+   text-align: right;
+}
+
+.sub__header_rt .addBtn{
+   float:inherit;
+}
+.sub__header_lt {
+   float:left;
+   width:50%;
 }
 
 .side__menu {

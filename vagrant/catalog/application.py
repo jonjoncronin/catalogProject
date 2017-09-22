@@ -270,6 +270,10 @@ def deleteItem(item_id):
         return render_template('delete.html', item=item, categories=categories)
 
 
+@app.route('/login/')
+def showLogin():
+    return render_template('login.html')
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
