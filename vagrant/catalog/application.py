@@ -111,6 +111,9 @@ def newItem():
     route to newItem will render a page to allow a user to create a new item
     through a web form and store it in the database.
     """
+    if 'username' not in login_session:
+        return redirect(url_for('showLogin'))
+
     categories = session.query(Category).order_by(Category.name).all()
     if request.method == 'POST':
         print(request.form)
@@ -176,6 +179,9 @@ def editItem(item_id):
     items category and/or description. Due to the table dependencies an edit
     will be processed as an delete->add action.
     """
+    if 'username' not in login_session:
+        return redirect(url_for('showLogin'))
+
     categories = session.query(Category).order_by(Category.name).all()
     editedItem = session.query(Item).filter_by(id=item_id).one()
     item_name = editedItem.name
@@ -260,6 +266,9 @@ def deleteItem(item_id):
     route to deleteItem will render a page to prompt the user for confirmation
     that an item is to be deleted and performs the delete if confirmed.
     """
+    if 'username' not in login_session:
+        return redirect(url_for('showLogin'))
+
     categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
     item_name = item.name
@@ -382,6 +391,34 @@ def gconnect():
     print "done!"
     flash("you are now logged in as %s" % login_session['username'])
     return output
+
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print 'Access Token is None'
+        flash("There was an issue logging out")
+        return redirect(url_for('showItems'))
+    print 'In gdisconnect access token is %s', access_token
+    print 'User name is: '
+    print login_session['username']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    print 'result is '
+    print result
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        flash("You have logged out")
+        return redirect(url_for('showItems'))
+    else:
+        flash("There was an issue logging out")
+        return redirect(url_for('showItems'))
 
 
 if __name__ == '__main__':
