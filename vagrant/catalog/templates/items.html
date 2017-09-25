@@ -35,7 +35,8 @@
                               {% if 'username' not in session %}
                               <a href="{{url_for('showLogin')}}"<span class="addBtn">Login</span></a>
                               {% else %}
-                              <a href="{{url_for('gdisconnect')}}"<span class="addBtn">Logout</span></a>
+                              logged in as - {{session['provider']}}
+                              <a href="{{url_for('disconnect')}}"<span class="addBtn">Logout</span></a>
                               {% endif %}
                         </div>
                   </div>
