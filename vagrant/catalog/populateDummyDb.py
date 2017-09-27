@@ -1,6 +1,7 @@
+#!/usr/local/bin/python3
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base, Item, Category
+from models import Base, Item, Category, User
 
 engine = create_engine('sqlite:///catalog.db')
 # Bind the engine to the metadata of the Base class so that the
@@ -36,6 +37,11 @@ itemsList = (
      }
 )
 
+# Create a default user
+defUser = User(name="Jon Cronin", email="jonjoncronin@gmail.com", picture="https://lh3.googleusercontent.com/-4efzIJndrVs/AAAAAAAAAAI/AAAAAAAAAK0/BYo3yGPBxE4/photo.jpg")
+session.add(defUser)
+session.commit()
+
 # Create dummy items
 for category in itemsList:
     someCategory = Category(name=category['category'])
@@ -45,7 +51,11 @@ for category in itemsList:
     print("New Category {0}\n".format(category))
     for item in category['items']:
         someItem = Item(
-            name=item['name'], description=item['description'], category_id=newCat.id)
+            user_id=defUser.id,
+            name=item['name'],
+            description=item['description'],
+            category_id=newCat.id)
+
         session.add(someItem)
         print("added {0}\n".format(item))
     print("=======================\n")

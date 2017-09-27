@@ -15,7 +15,7 @@ from flask import session as login_session
 from flask import make_response
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
-from models import Base, Item, Category
+from models import Base, Item, Category, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
@@ -49,7 +49,8 @@ def showItems():
     """
     categories = session.query(Category).order_by(Category.name).all()
     items = session.query(Item).order_by(Item.name)
-    return render_template('items.html', items=items, categories=categories)
+    users = session.query(User)
+    return render_template('items.html', items=items, categories=categories, users=users)
 
 # @app.route('/catalog/category/<string:category_name>/')
 
@@ -64,7 +65,8 @@ def showItemsForCategory(category_id):
     targetCategory = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(
         category_id=category_id).order_by(Item.name)
-    return render_template('categoryItems.html', items=items, categories=categories, targetCategory=targetCategory)
+    users = session.query(User)
+    return render_template('categoryItems.html', items=items, categories=categories, targetCategory=targetCategory, users=users)
 
 
 @app.route('/catalog/JSON')
@@ -152,7 +154,7 @@ def newItem():
                         flash("Failed to add item {0}".format(request.form['name']))
                         return redirect(url_for('showItems'))
 
-                newItem = Item(name=request.form['name'],
+                newItem = Item(user_id=login_session['user_id'],name=request.form['name'],
                                description=request.form['description'],
                                category_id=existingCategory.id)
                 try:
@@ -185,6 +187,13 @@ def editItem(item_id):
     categories = session.query(Category).order_by(Category.name).all()
     editedItem = session.query(Item).filter_by(id=item_id).one()
     item_name = editedItem.name
+
+    # check to see if the current user can edit the item
+    creator = getUserInfo(editedItem.user_id)
+    if creator.id != login_session['user_id']:
+        flash("{0} does have permission to edit the {1} item".format(login_session['username'],item_name))
+        return redirect(url_for('showItems'))
+
     if request.method == 'POST':
         print("attempting to edit an item")
         print(request.form)
@@ -273,6 +282,13 @@ def deleteItem(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
     item_name = item.name
     category = item.category
+
+    # check to see if the current user can delete the item
+    creator = getUserInfo(item.user_id)
+    if creator.id != login_session['user_id']:
+        flash("{0} does have permission to delete the {1} item".format(login_session['username'],item_name))
+        return redirect(url_for('showItems'))
+
     if request.method == 'POST':
         print("attempting to delete an item")
         try:
@@ -382,6 +398,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # check to see if user already exists and add into the User table if not
+    user_id = getUserID(login_session['email'])
+    if user_id is None:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -476,11 +498,11 @@ def fbconnect():
 
     login_session['picture'] = data["data"]["url"]
 
-    # see if user exists
-    # user_id = getUserID(login_session['email'])
-    # if not user_id:
-    #     user_id = createUser(login_session)
-    # login_session['user_id'] = user_id
+    # check to see if user already exists and add into the User table if not
+    user_id = getUserID(login_session['email'])
+    if user_id is None:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -523,13 +545,42 @@ def disconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        # del login_session['user_id']
+        del login_session['user_id']
         del login_session['provider']
         flash("You are a mere mortal")
         return redirect(url_for('showItems'))
     else:
         flash("You were not logged in")
         return redirect(url_for('showItems'))
+
+# User Helper Functions
+# Create a new user
+def createUser(login_session):
+    newUser = User(name= login_session['username'],
+                   email = login_session['email'],
+                   picture = login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id = user_id).one()
+    return user
 
 
 if __name__ == '__main__':

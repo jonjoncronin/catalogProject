@@ -72,14 +72,19 @@
                     {% else %} {% for item in items %}
                     <button class="accordion">{{item.name}}</button>
                     <span class=mgmt__menu>
-                                    <a href="{{url_for(
-                                       'editItem', item_id = item.id)}}"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
-                                    <a href="{{url_for(
-                                       'deleteItem', item_id = item.id)}}"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
-                              </span>
+                        {% if 'user_id' in session %}
+                        {% if item.user_id == session['user_id'] %}
+                        <a href="{{url_for(
+                           'editItem', item_id = item.id)}}"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+                        <a href="{{url_for(
+                           'deleteItem', item_id = item.id)}}"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+                        {% endif %}
+                        {% endif %}
+                    </span>
                     <div class="panel">
                         Description:
-                        <span class="panel__category">({{item.category.name}})</span><br> {{item.description}}
+                        <span class="panel__category">({{item.category.name}})</span><br>
+                        {{item.description}}
                     </div>
                     {% endfor %} {% endif %}
                 </section>
