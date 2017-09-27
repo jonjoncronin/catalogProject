@@ -112,7 +112,7 @@ def newItem():
     through a web form and store it in the database.
     """
     if 'username' not in login_session:
-        return redirect(url_for('showLogin'))
+        return redirect(url_for('showAuth'))
 
     categories = session.query(Category).order_by(Category.name).all()
     if request.method == 'POST':
@@ -180,7 +180,7 @@ def editItem(item_id):
     will be processed as an delete->add action.
     """
     if 'username' not in login_session:
-        return redirect(url_for('showLogin'))
+        return redirect(url_for('showAuth'))
 
     categories = session.query(Category).order_by(Category.name).all()
     editedItem = session.query(Item).filter_by(id=item_id).one()
@@ -267,7 +267,7 @@ def deleteItem(item_id):
     that an item is to be deleted and performs the delete if confirmed.
     """
     if 'username' not in login_session:
-        return redirect(url_for('showLogin'))
+        return redirect(url_for('showAuth'))
 
     categories = session.query(Category).order_by(Category.name).all()
     item = session.query(Item).filter_by(id=item_id).one()
@@ -300,13 +300,13 @@ def deleteItem(item_id):
         return render_template('delete.html', item=item, categories=categories)
 
 
-@app.route('/login/')
-def showLogin():
+@app.route('/auth/')
+def showAuth():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
+    return render_template('authenticate.html', STATE=state)
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -390,7 +390,7 @@ def gconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     print "done!"
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("{0} has the power to create".format(login_session['username']))
     return output
 
 
@@ -409,17 +409,17 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
     print 'result is '
     print result
-    if result['status'] == '200':
-        # del login_session['access_token']
-        # del login_session['gplus_id']
-        # del login_session['username']
-        # del login_session['email']
-        # del login_session['picture']
-        flash("You have logged out")
-        return redirect(url_for('showItems'))
-    else:
-        flash("There was an issue logging out")
-        return redirect(url_for('showItems'))
+    return "you have been logged out"
+    # if result['status'] == '200':
+    #     # del login_session['access_token']
+    #     # del login_session['gplus_id']
+    #     # del login_session['username']
+    #     # del login_session['email']
+    #     # del login_session['picture']
+    #     return redirect(url_for('showItems'))
+    # else:
+    #     flash("There was an issue logging out")
+    #     return redirect(url_for('showItems'))
 
 
 @app.route('/fbconnect', methods=['POST'])
@@ -491,7 +491,7 @@ def fbconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
 
-    flash("Now logged in as %s" % login_session['username'])
+    flash("{0} has the power to create".format(login_session['username']))
     return output
 
 
@@ -503,6 +503,8 @@ def fbdisconnect():
     url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
+    print 'result is '
+    print result
     return "you have been logged out"
 
 
@@ -523,7 +525,7 @@ def disconnect():
         del login_session['picture']
         # del login_session['user_id']
         del login_session['provider']
-        flash("You have successfully been logged out.")
+        flash("You are a mere mortal")
         return redirect(url_for('showItems'))
     else:
         flash("You were not logged in")

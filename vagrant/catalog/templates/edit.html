@@ -2,74 +2,96 @@
 <html>
 
 <head>
-      <title>Catalog App - Edit {{item.name}} Item</title>
-      <meta charset="utf-8" />
-      <meta name="viewport"
-            content="width=device-width, initial-scale=1" />
-      <link href="https://fonts.googleapis.com/css?family=Comfortaa"
-            rel="stylesheet">
-      <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet"
-            href="{{url_for('static', filename='css/main.css')}}" />
+    <title>Catalog App - Edit {{item.name}} Item</title>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="{{url_for('static', filename='css/main.css')}}" />
 
 </head>
 
 <body>
-      <main>
-            <!-- Header -->
-            <header class="header">
-                  <h1>Catalog APP - Edit <u>{{item.name}}</u></h1>
-                  <hr>
-            </header>
-            <div class="big__div">
-
-                  <!-- Side Menu -->
-                  <div class="side__menu">
-                        <nav>
-                              <li><a href="{{url_for('showItems')}}">home</a>
-                              {% if categories %}
-                               {% for entry in categories %}
-                              <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
-                               {% endfor %}
-                              {% endif %}
-                        </nav>
-                  </div>
-                  <!-- Main -->
-                  <div class="primary__content">
-                        <!-- Main Content -->
-
-                        <section class="content">
-                           <form name="editForm"
-                                 action="#"
-                                 method="POST">
-                                 <label for="name">Name: <u><strong>{{item.name}}</strong></u></label><br>
-
-                                 <label for="category">Category:</label><br>
-                                 <input type="text"
-                                        required
-                                        class="form-control"
-                                        maxlength="100"
-                                        name="category"
-                                        placeholder="{{item.category.name}}"><br>
-
-                                 <label for="description">Description:</label><br>
-                                 <textarea required
-                                           class="form-control"
-                                           maxlength="250"
-                                           rows="3"
-                                           name="description"
-                                           placeholder="{{item.description}}"></textarea><br>
-                                 <span onclick="document.forms.editForm.submit()"
-                                       class="addBtn">Edit</span>
-                           </form>
-                        </section>
-                  </div>
-                  <!-- Footer -->
-                  <div id="footer">
-                  </div>
+    <main>
+        <!-- Header -->
+        <header class="header">
+            <div class="header__rt">
+                {% if 'username' not in session %}
+                <a href="{{url_for('showAuth')}}">
+                    <span class="addBtn">MyItems</span>
+                </a>
+                {% else %}
+                <a href="{{url_for('disconnect')}}">
+                    <span class="addBtn">Logout</span>
+                </a>
+                <div class="logged__in">logged in as {{session['username']}}</div>
+                {% endif %}
             </div>
-      </main>
+            <h1>Catalog APP - Edit <u>{{item.name}}</u></h1>
+            <hr>
+            <div class="sub__header">
+                <div class=sub__header_lt>
+                    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+                    <div class="flash__message">
+                        {{ message }}
+                    </div>
+                    {% endfor %} {% else %}
+                    <div class="flash__message">
+                        </br>
+                    </div>
+                    {% endif %} {% endwith %}
+                </div>
+            </div>
+        </header>
+        <div class="big__div">
+
+            <!-- Side Menu -->
+            <div class="side__menu">
+                <nav>
+                    <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
+                        <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
+                        {% endfor %} {% endif %}
+                </nav>
+            </div>
+            <!-- Main -->
+            <div class="primary__content">
+                <!-- Main Content -->
+
+                <section class="content">
+                    <form name="editForm"
+                          action="#"
+                          method="POST">
+                        <label for="name">Name: <u><strong>{{item.name}}</strong></u></label><br>
+
+                        <label for="category">Category:</label><br>
+                        <input type="text"
+                               required
+                               class="form-control"
+                               maxlength="100"
+                               name="category"
+                               placeholder="{{item.category.name}}"><br>
+
+                        <label for="description">Description:</label><br>
+                        <textarea required
+                                  class="form-control"
+                                  maxlength="250"
+                                  rows="3"
+                                  name="description"
+                                  placeholder="{{item.description}}"></textarea><br>
+                        <span onclick="document.forms.editForm.submit()"
+                              class="addBtn">Edit</span>
+                    </form>
+                </section>
+            </div>
+            <!-- Footer -->
+            <div id="footer">
+            </div>
+        </div>
+    </main>
 
 </body>
 
