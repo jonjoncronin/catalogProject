@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Item, Category, User
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine("sqlite:///catalog.db")
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine
@@ -24,21 +24,21 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 itemsList = (
-    {'category': 'kitchen',
-     'items': (
-         {'name': 'fork', 'description': ''},
-         {'name': 'knife', 'description': ''},
-         {'name': 'spoon', 'description': ''},
-         {'name': 'plate', 'description': ''},
-         {'name': 'bowl', 'description': ''})
+    {"category": "kitchen",
+     "items": (
+         {"name": "fork", "description": ""},
+         {"name": "knife", "description": ""},
+         {"name": "spoon", "description": ""},
+         {"name": "plate", "description": ""},
+         {"name": "bowl", "description": ""})
      },
-    {'category': 'bathroom',
-        'items': (
-            {'name': 'toothbrush', 'description': ''},
-            {'name': 'toothpaste', 'description': ''},
-            {'name': 'floss', 'description': ''},
-            {'name': 'razor', 'description': ''},
-            {'name': 'hairbrush', 'description': ''})
+    {"category": "bathroom",
+        "items": (
+            {"name": "toothbrush", "description": ""},
+            {"name": "toothpaste", "description": ""},
+            {"name": "floss", "description": ""},
+            {"name": "razor", "description": ""},
+            {"name": "hairbrush", "description": ""})
      }
 )
 
@@ -49,16 +49,16 @@ session.commit()
 
 # Create dummy items
 for category in itemsList:
-    someCategory = Category(name=category['category'])
+    someCategory = Category(name=category["category"])
     session.add(someCategory)
     session.commit()
     newCat = session.query(Category).filter_by(name=someCategory.name).one()
     print("New Category {0}\n".format(category))
-    for item in category['items']:
+    for item in category["items"]:
         someItem = Item(
             user_id=defUser.id,
-            name=item['name'],
-            description=item['description'],
+            name=item["name"],
+            description=item["description"],
             category_id=newCat.id)
 
         session.add(someItem)
