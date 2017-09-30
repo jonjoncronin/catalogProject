@@ -1,4 +1,9 @@
 #!/usr/local/bin/python3
+"""
+The populateDummyDb.py module is a module intended utilize the object model for
+the Catalog Application and prepopulate the DB with some content to develop
+against.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Item, Category, User

@@ -1,11 +1,12 @@
 #!/usr/local/bin/python3
 """
-application.py -
-This module is a standalone module intended to act as a webserver hosting
-the site for a Catalog Item App.
+The application.py module is a standalone module intended to act as a webserver
+hosting the site for a Catalog Item App.
+
 This Catalog Item App is intended to allow users to maintain a list of items
 that fall under a variety of categories. Both the item and the category it falls
 under are user specified.
+
 Currently an item is unique even if it falls under different categories - ie
 you CANNOT have a ball under the category of baseball and a ball under the
 category of soccer.
@@ -22,16 +23,14 @@ from oauth2client.client import FlowExchangeError
 import httplib2, random, string, json, requests
 
 
-"""
-Store off Google CLIENT_ID and APPLICATION_NAME
-"""
+
+# Store off Google CLIENT_ID and APPLICATION_NAME
 CLIENT_ID = json.loads(
     open('google_client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog Project Application"
 
-"""
-Create the connections and sessions to the catalog database
-"""
+
+# Create the connections and sessions to the catalog database
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -41,6 +40,18 @@ app = Flask(__name__)
 
 @app.route('/page')
 def showPage():
+    """
+    Function that handles the '/page' route and will render the page.html
+    template.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A flask template for page.html.
+    """
     return render_template('page.html')
 
 
@@ -48,8 +59,17 @@ def showPage():
 @app.route('/catalog/')
 def showItems():
     """
-    routes to showItems will render the initial home page that show all the
-    items in the database and the categories they fall under.
+    Function that handles the routes to '/' and '/catalog' and will render the
+    initial home page that show all the items in the database as well as the
+    categories they fall under.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A flask template for items.html.
     """
     categories = session.query(Category).order_by(Category.name).all()
     items = session.query(Item).order_by(Item.name)
@@ -62,8 +82,17 @@ def showItems():
 @app.route('/catalog/category/<int:category_id>/')
 def showItemsForCategory(category_id):
     """
-    route to showItemsForCategory will render a page that shows the items
-    associated with a specific category.
+    Function that handles the routes to 'catalog/category/<someCategory>' and
+    will render a page that shows the items associated with a specific category.
+
+    Parameters
+    =======================================================
+    category_id - int
+        The category_id for which to show items for.
+
+    Returns
+    =======================================================
+    A flask template for categoryItems.html.
     """
     categories = session.query(Category).order_by(Category.name).all()
     targetCategory = session.query(Category).filter_by(id=category_id).one()
@@ -76,8 +105,17 @@ def showItemsForCategory(category_id):
 @app.route('/catalog/JSON')
 def allItemsByAllCategoryJSON():
     """
-    route to allItemsByAllCatagoryJSON will dump all the items in the database
-    in JSON format ordered in a format that shows items per category.
+    Function that handles the routes to 'catalog/JSON' and will return a JSON
+    formatted stream to the caller for all the categories and their items
+    currently in the database.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    JSON formatted stream for all the categories and their items.
     """
     categories = session.query(Category).order_by(Category.name).all()
     cate_dict = [entry.serialize for entry in categories]
@@ -94,8 +132,18 @@ def allItemsByAllCategoryJSON():
 @app.route('/catalog/item/<int:item_id>/JSON')
 def itemDetailsJSON(item_id):
     """
-    route to itemDetailsJSON will dump all the details about a specific item in
-    JSON format.
+    Function that handles the routes to 'catalog/item/<someItem>/JSON' and will
+    return a JSON formatted stream to the caller for all the details of a
+    specific item.
+
+    Parameters
+    =======================================================
+    item_id - int
+        The item_id of the item in the DB to retrieve details for.
+
+    Returns
+    =======================================================
+    JSON formatted stream of the items details.
     """
     item = session.query(Item).filter_by(id=item_id).one()
     return jsonify(Item=item.serialize)
@@ -104,8 +152,17 @@ def itemDetailsJSON(item_id):
 @app.route('/catalog/category/JSON')
 def allCategoriesJSON():
     """
-    route to allCatagoriesJSON will dump all the categories in the database
-    in JSON format ordered by name.
+    Function that handles the routes to 'catalog/category/JSON' and will
+    return a JSON formatted stream to the caller for all the categories
+    currently in the DB.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    JSON formatted stream of the categories.
     """
     categories = session.query(Category).order_by(Category.name).all()
     return jsonify(Category=[entry.serialize for entry in categories])
@@ -114,8 +171,17 @@ def allCategoriesJSON():
 @app.route('/catalog/item/new/', methods=['GET', 'POST'])
 def newItem():
     """
-    route to newItem will render a page to allow a user to create a new item
-    through a web form and store it in the database.
+    Function that handles the routes to 'catalog/item/new' and will render a
+    page that shows the input form for creating a new item.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    On GET - A flask template for new.html.
+    On POST - A flask template for items.html.
     """
     if 'username' not in login_session:
         return redirect(url_for('showAuth'))
@@ -181,9 +247,19 @@ def newItem():
 @app.route('/catalog/item/<int:item_id>/edit', methods=['GET', 'POST'])
 def editItem(item_id):
     """
-    route to editItem will render a page to allow a user to edit a specific
-    items category and/or description. Due to the table dependencies an edit
-    will be processed as an delete->add action.
+    Function that handles the routes to 'catalog/item/<someItem>/edit' and will
+    render a page that shows the input form for editing a specific item. Due to
+    table dependencies an edit action will be processed as a delete->add action.
+
+    Parameters
+    =======================================================
+    item_id - int
+        The item_id of the item in the DB to be editted.
+
+    Returns
+    =======================================================
+    On GET - A flask template for edit.html.
+    On POST - A flask template for items.html.
     """
     if 'username' not in login_session:
         return redirect(url_for('showAuth'))
@@ -279,6 +355,21 @@ def deleteItem(item_id):
     route to deleteItem will render a page to prompt the user for confirmation
     that an item is to be deleted and performs the delete if confirmed.
     """
+    """
+    Function that handles the routes to 'catalog/item/<someItem>/delete' and
+    will render a page that shows the confirmation page for deleting a specific
+    item.
+
+    Parameters
+    =======================================================
+    item_id - int
+        The item_id of the item in the DB to be deleted.
+
+    Returns
+    =======================================================
+    On GET - A flask template for delete.html.
+    On POST - A flask template for items.html.
+    """
     if 'username' not in login_session:
         return redirect(url_for('showAuth'))
 
@@ -322,6 +413,19 @@ def deleteItem(item_id):
 
 @app.route('/auth/')
 def showAuth():
+    """
+    Function that handles the routes to '/auth/' and will render a page that
+    shows the prompts for signing in/logging in to the site via Facebook or
+    Google credentials.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A flask template for authenticate.html.
+    """
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -331,6 +435,20 @@ def showAuth():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    Function that handles the routes to '/gconnect/' and will process the oauth
+    session and flow with Google for users attempting to sign in/login to the
+    Catalog App using their Google credentials.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A string output of HTML syntax and text that is used by on the
+    authenticate.html page to indicate success or failure.
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -422,6 +540,20 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    """
+    Function that handles the routes to '/gdisconect/' and will process the
+    disconnection from the Google oauth backend.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    Nothing on success.
+    On failure to disconnect returns a response object to redirect the user to
+    the items.html page.
+    """
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
@@ -435,7 +567,8 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
     print 'result is '
     print result
-    return "you have been logged out"
+    # return "you have been logged out"
+    return
     # if result['status'] == '200':
     #     # del login_session['access_token']
     #     # del login_session['gplus_id']
@@ -450,6 +583,20 @@ def gdisconnect():
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    """
+    Function that handles the routes to '/fbconnect/' and will process the oauth
+    session and flow with Facebook for users attempting to sign in/login to the
+    Catalog App using their Facebook credentials.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A string output of HTML syntax and text that is used by on the
+    authenticate.html page to indicate success or failure.
+    """
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -523,6 +670,18 @@ def fbconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
+    """
+    Function that handles the routes to '/fbdisconect/' and will process the
+    disconnection from the Facebook oauth backend.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    Nothing on success.
+    """
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
@@ -531,12 +690,26 @@ def fbdisconnect():
     result = h.request(url, 'DELETE')[1]
     print 'result is '
     print result
-    return "you have been logged out"
+    # return "you have been logged out"
+    return
 
 
 # Disconnect based on provider
 @app.route('/disconnect')
 def disconnect():
+    """
+    Function that handles the routes to '/disconect/' and will process the
+    disconnection from either the Google or Facebook oauth backend depending on
+    which is currently in use in the current session.
+
+    Parameters
+    =======================================================
+    None
+
+    Returns
+    =======================================================
+    A response object to redirect the user to the items.html page.
+    """
     print login_session
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
@@ -560,6 +733,20 @@ def disconnect():
 # User Helper Functions
 # Create a new user
 def createUser(login_session):
+    """
+    Function to create a new user in the DB.
+
+    Parameters
+    =======================================================
+    login_session - flask session object
+        The current session for which a user is attempting to sign in/login
+        with.
+
+    Returns
+    =======================================================
+    int -
+        The user.id value of the new user object added to the DB
+    """
     newUser = User(name= login_session['username'],
                    email = login_session['email'],
                    picture = login_session['picture'])
@@ -570,21 +757,45 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """
+    Function to retrieve the User object for a specific user being stored in the
+    DB.
+
+    Parameters
+    =======================================================
+    user_id - int
+        The user_id of the User to be retrieved from the DB.
+
+    Returns
+    =======================================================
+    User Object -
+        The User object associated with the specified user_id.
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """
+    Function to retrieve the user.id for a specific User being stored in the
+    DB based on an email address.
+
+    Parameters
+    =======================================================
+    email - string
+        The email address of the User to be retrieved from the DB.
+
+    Returns
+    =======================================================
+    int -
+        The user.id value of the User object associated with the specified
+        email address
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
         return None
-
-
-def getUserInfo(user_id):
-    user = session.query(User).filter_by(id = user_id).one()
-    return user
 
 
 if __name__ == '__main__':
