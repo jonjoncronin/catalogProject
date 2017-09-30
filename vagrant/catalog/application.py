@@ -311,7 +311,7 @@ def editItem(item_id):
                     flash("Failed to edit item {0}".format(item_name))
                     return redirect(url_for("showItems"))
 
-            newItem = Item(name=item_name,description=request.form["description"],category_id=existingCategory.id)
+            newItem = Item(user_id=login_session["user_id"],name=item_name,description=request.form["description"],category_id=existingCategory.id)
             try:
                 session.add(newItem)
                 session.commit()
