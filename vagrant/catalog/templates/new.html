@@ -41,7 +41,7 @@
                     </div>
                     {% endfor %} {% else %}
                     <div class="flash__message">
-                        </br>
+                        <br>
                     </div>
                     {% endif %} {% endwith %}
                 </div>
@@ -52,9 +52,11 @@
             <!-- Side Menu -->
             <div class="side__menu">
                 <nav>
+                  <ul>
                     <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
                         <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
                         {% endfor %} {% endif %}
+                  </ul>
                 </nav>
             </div>
             <!-- Main -->
@@ -65,21 +67,21 @@
                     <form name="thisform"
                           action="#"
                           method="POST">
-                        <label for="name">Name:</label><br>
+                        <label>Name:</label><br>
                         <input type="text"
                                required
                                class="form-control"
                                maxlength="100"
                                name="name"><br>
 
-                        <label for="category">Category:</label><br>
+                        <label>Category:</label><br>
                         <input type="text"
                                required
                                class="form-control"
                                maxlength="100"
                                name="category"><br>
 
-                        <label for="description">Description:</label><br>
+                        <label>Description:</label><br>
                         <textarea required
                                   class="form-control"
                                   maxlength="250"

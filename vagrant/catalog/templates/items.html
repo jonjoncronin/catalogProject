@@ -41,7 +41,7 @@
                     </div>
                     {% endfor %} {% else %}
                     <div class="flash__message">
-                        </br>
+                        <br>
                     </div>
                     {% endif %} {% endwith %}
                 </div>
@@ -52,9 +52,11 @@
             <!-- Side Menu -->
             <div class="side__menu">
                 <nav>
+                  <ul>
                     <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
                         <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
                         {% endfor %} {% endif %}
+                  </ul>
                 </nav>
             </div>
             <!-- Main -->

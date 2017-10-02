@@ -35,7 +35,7 @@
                 <div class="logged__in">logged in as {{session['username']}}</div>
                 {% endif %}
             </div>
-            <h1>Catalog APP</u></h1>
+            <h1>Catalog APP</h1>
             <hr>
             <div class="sub__header">
                 <div class=sub__header_lt>
@@ -45,7 +45,7 @@
                     </div>
                     {% endfor %} {% else %}
                     <div class="flash__message">
-                        </br>
+                        <br>
                     </div>
                     {% endif %} {% endwith %}
                 </div>
@@ -56,9 +56,11 @@
             <!-- Side Menu -->
             <div class="side__menu">
                 <nav>
+                  <ul>
                     <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
                         <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
                         {% endfor %} {% endif %}
+                  </ul>
                 </nav>
             </div>
             <!-- Main -->

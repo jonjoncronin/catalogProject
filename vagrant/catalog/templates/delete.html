@@ -41,7 +41,7 @@
                     </div>
                     {% endfor %} {% else %}
                     <div class="flash__message">
-                        </br>
+                        <br>
                     </div>
                     {% endif %} {% endwith %}
                 </div>
@@ -52,9 +52,11 @@
             <!-- Side Menu -->
             <div class="side__menu">
                 <nav>
+                  <ul>
                     <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
                         <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
                         {% endfor %} {% endif %}
+                  </ul>
                 </nav>
             </div>
             <!-- Main -->
@@ -62,7 +64,7 @@
                 <!-- Main Content -->
 
                 <section class="content">
-                    <h1>Are you sure you want to delete <u><strong>{{item.name}}</strong></u> from the catalog?</h1>
+                    <h2>Are you sure you want to delete <u><strong>{{item.name}}</strong></u> from the catalog?</h2>
                     <form name="deleteForm"
                           action="#"
                           method="POST">
