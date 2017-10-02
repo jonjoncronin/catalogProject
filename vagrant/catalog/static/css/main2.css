@@ -45,8 +45,35 @@ button.accordion.active:before {
 .accordion-guts {
   width: 70%;
 }
-.mgmtButtons {
-   width: 20%;
+
+.accordion-mgmt {
+  width: 20%;
+}
+
+.accordion-guts-category {
+  font-variant: small-caps;
+  font-style: italic;
+  font-weight: 900;
+}
+
+#header {
+  min-width: 320px;
+}
+
+#loginStatus {
+  clear: both;
+}
+
+#addItemsButton {
+  width: 10%;
+}
+
+#targetContent {
+  width: 90%;
+}
+
+#headerMenuToggle {
+  margin-top: 8px;
 }
 
 #pageGuts {

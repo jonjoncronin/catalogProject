@@ -14,33 +14,30 @@
           rel="stylesheet">
     <link rel="stylesheet"
           href="/static/css/main2.css" />
-
 </head>
 
 <body>
     <main>
         <header id="header"
-                class="w3-container w3-row w3-blue-gray"
-                style="min-width=320px">
+                class="w3-container w3-row w3-blue-gray">
             <div id="authBlock"
                  class="w3-container w3-col s2 m2 l2 w3-right w3-right-align">
                 <a href="#"
                    class="w3-button w3-dark-gray w3-right relaxed">Login</a>
                 <div id="loginStatus"
-                     class="w3-small w3-right"
-                     style="clear:both;">logged in as user</div>
+                     class="w3-small w3-right">logged in as user</div>
             </div>
             <div id="headerBlock"
                  class="w3-container w3-col s10 m10 l10 w3-left">
+                 <div id="headerMenuToggle"
+                      class="w3-animate-opacity w3-left w3-hide-large">
+                     <button id="menuToggleButton"
+                             class="w3-button w3-large relaxed"
+                             onclick="toggleMenu()">
+                         &#9776;
+                     </button>
+                 </div>
                 <h3>Catalog APP</h3>
-                <div id="headerMenuToggle"
-                     class="w3-hide-large">
-                    <button id="menuToggleButton"
-                            class="w3-button w3-large relaxed"
-                            onclick="w3_open()">
-                        &#9776;
-                    </button>
-                </div>
             </div>
             <div id="flashMessages"
                  class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top w3-pale-green">
@@ -52,7 +49,7 @@
             <nav id="sideMenu"
                  class="w3-sidebar w3-bar-block w3-collapse w3-card-2 w3-col s3 m3 l2 w3-bar-block w3-light-gray w3-animate-left">
                 <button class="w3-bar-item w3-button w3-hide-large relaxed"
-                        onclick="w3_close()">Close &times;
+                        onclick="toggleMenu()">Close &times;
                 </button>
                 <a href="#"
                    class="w3-bar-item w3-button relaxed">category</a>
@@ -67,58 +64,20 @@
             <div id="pageGuts"
                  class="w3-container w3-col s12 m12 l10">
                 <div id="addItemsButton"
-                     class="w3-right w3-right-align"
-                     style="width:10%">
+                     class="w3-right w3-right-align">
                     <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
                 </div>
-                <section class="w3-left"
-                         style="width:90%">
+                <section id="targetContent" class="w3-left">
                     <h4>All Items</h4>
                     <hr>
-                    <button class="accordion relaxed w3-button">Item X</button>
-                    <span style="width:20%;">
+                    <button class="w3-button accordion relaxed">Item X</button>
+                    <span class="accordion-mgmt">
                         <a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
                         <a href="#"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
                     </span>
                     <div class="w3-container w3-hide relaxed accordion-guts">
                         Description:
-                        <span class="panel__category">(category)</span><br> description description description
-                        description description description description description description description
-                        description description description description description description description
-                        description
-                    </div>
-                    <button class="accordion relaxed w3-button">Item X</button>
-                    <span style="width:20%;">
-                        <a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
-                    </span>
-                    <div class="w3-container w3-hide relaxed accordion-guts">
-                        Description:
-                        <span class="panel__category">(category)</span><br> description description description
-                        description description description description description description description
-                        description description description description description description description
-                        description
-                    </div>
-                    <button class="accordion relaxed w3-button">Item X</button>
-                    <span style="width:20%;">
-                        <a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
-                    </span>
-                    <div class="w3-container w3-hide relaxed accordion-guts">
-                        Description:
-                        <span class="panel__category">(category)</span><br> description description description
-                        description description description description description description description
-                        description description description description description description description
-                        description
-                    </div>
-                    <button class="accordion relaxed w3-button">Item X</button>
-                    <span class=mgmtButtons>
-                        <a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
-                        <a href="#"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
-                    </span>
-                    <div class="w3-container w3-hide relaxed accordion-guts">
-                        Description:
-                        <span class="panel__category">(category)</span><br> description description description
+                        <span class="accordion-guts-category">(category)</span><br> description description description
                         description description description description description description description
                         description description description description description description description
                         description
@@ -143,12 +102,13 @@
             }
         }
 
-        function w3_open() {
-            document.getElementById("sideMenu").style.display = "block";
-        }
-
-        function w3_close() {
-            document.getElementById("sideMenu").style.display = "none";
+        function toggleMenu() {
+            if(document.getElementById("sideMenu").style.display == "block") {
+                document.getElementById("sideMenu").style.display = "none";
+            }
+            else {
+                document.getElementById("sideMenu").style.display = "block";
+            }
         }
     </script>
 </body>
