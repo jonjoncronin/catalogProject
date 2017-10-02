@@ -1,7 +1,9 @@
-/*Style Sheet for Jon Cronin Catalog App Project -
-This style sheet attempts to capture the design/style of the
-page/site content leaving the HTML pages to include just the
-content itself.*/
+/**********************************************************
+ * Style Sheet for Jon Cronin Catalog App Project -
+ * This style sheet attempts to capture the design/style of the
+ * page/site content leaving the HTML pages to include just the
+ * content itself.
+ *********************************************************/
 
 body {
    font-family: "Comfortaa", cursive;
