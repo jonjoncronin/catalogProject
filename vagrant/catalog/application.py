@@ -11,7 +11,8 @@ Currently an item is unique even if it falls under different categories - ie
 you CANNOT have a ball under the category of baseball and a ball under the
 category of soccer.
 """
-from flask import Flask, render_template, url_for, request, redirect, flash, jsonify, g
+from flask import Flask, render_template, url_for, request, redirect, flash
+from flask import jsonify, g
 from flask import session as login_session
 from flask import make_response
 from sqlalchemy import create_engine, func
@@ -333,7 +334,8 @@ def editItem(item_id):
                     return redirect(url_for("showItems"))
 
             newItem = Item(user_id=login_session["user_id"], name=item_name,
-                           description=request.form["description"], category_id=existingCategory.id)
+                           description=request.form["description"],
+                           category_id=existingCategory.id)
             try:
                 session.add(newItem)
                 session.commit()
@@ -348,7 +350,8 @@ def editItem(item_id):
         flash("Item {0} has been modified".format(item_name))
         return redirect(url_for("showItems"))
     else:
-        return render_template("edit.html", item=editedItem, categories=categories)
+        return render_template("edit.html", item=editedItem,
+                                            categories=categories)
 
 
 @app.route('/catalog/item/<int:item_id>/delete', methods=['GET', 'POST'])
