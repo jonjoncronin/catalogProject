@@ -42,6 +42,9 @@ button.accordion.active:before {
    /* Unicode character for "minus" sign (-) */
 }
 
+.accordion-guts {
+  width: 70%;
+}
 .mgmtButtons {
    width: 20%;
 }
