@@ -45,3 +45,15 @@ button.accordion.active:before {
 .mgmtButtons {
    width: 20%;
 }
+
+#pageGuts {
+  margin-left: 0;
+  transition: 0.4s;
+}
+
+@media only screen and (min-width: 993px) {
+  #pageGuts {
+    margin-left: 17%;
+    transition: 0.4s;
+  }
+}

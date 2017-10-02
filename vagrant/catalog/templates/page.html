@@ -32,7 +32,15 @@
             </div>
             <div id="headerBlock"
                  class="w3-container w3-col s10 m10 l10 w3-left">
-                <h1>Catalog APP</h1>
+                <h3>Catalog APP</h3>
+                <div id="headerMenuToggle"
+                     class="w3-hide-large">
+                    <button id="menuToggleButton"
+                            class="w3-button w3-large relaxed"
+                            onclick="w3_open()">
+                        &#9776;
+                    </button>
+                </div>
             </div>
             <div id="flashMessages"
                  class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top w3-pale-green">
@@ -42,7 +50,10 @@
         <div id="pageContent"
              class="w3-container w3-row w3-white w3-border-top w3-border-white">
             <nav id="sideMenu"
-                 class="w3-col s2 m2 l2 w3-bar-block w3-light-gray">
+                 class="w3-sidebar w3-bar-block w3-collapse w3-card-2 w3-col s3 m3 l2 w3-bar-block w3-light-gray w3-animate-left">
+                <button class="w3-bar-item w3-button w3-hide-large relaxed"
+                        onclick="w3_close()">Close &times;
+                </button>
                 <a href="#"
                    class="w3-bar-item w3-button relaxed">category</a>
                 <a href="#"
@@ -54,7 +65,7 @@
             </nav>
             <!-- Main -->
             <div id="pageGuts"
-                 class="w3-container w3-col s10 m10 l10">
+                 class="w3-container w3-col s12 m12 l10">
                 <div id="addItemsButton"
                      class="w3-right w3-right-align"
                      style="width:10%">
@@ -130,6 +141,14 @@
                     panel.className = panel.className.replace(" w3-show", "");
                 }
             }
+        }
+
+        function w3_open() {
+            document.getElementById("sideMenu").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("sideMenu").style.display = "none";
         }
     </script>
 </body>
