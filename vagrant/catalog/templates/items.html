@@ -47,10 +47,16 @@
                 </h3>
             </div>
             <div id="flashMessages"
-                 class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top w3-pale-green">
-                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %} {{ message
-                }} {% endfor %} {% else %}
-                <br> {% endif %} {% endwith %}
+                 class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top">
+                {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                  {% for message in messages %}
+                <div class="w3-container w3-pale-green">{{ message }}</div>
+                  {% endfor %}
+                 {% else %}
+                <br>
+                 {% endif %}
+                {% endwith %}
             </div>
         </header>
         <div id="pageContent"
