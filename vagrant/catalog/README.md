@@ -102,7 +102,7 @@ The site provides 3 REST API endpoints that dump content in a JSON format when
 requested via the HTTP protocol. These 3 endpoints will allow an external
 caller to view the current table information for
  * all categories and their items in the database
- * all items in a specific category in the database
+ * all categories in the database
  * the details for a specific item in the database
 
 # Resources
