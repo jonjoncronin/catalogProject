@@ -1,251 +1,96 @@
-/*Style Sheet for Jon Cronin Catalog App Project -
-This style sheet attempts to capture the design/style of the
-page/site content leaving the HTML pages to include just the
-content itself.*/
+/**********************************************************
+ * Style Sheet for Jon Cronin Catalog App Project -
+ * This style sheet attempts to capture the design/style of the
+ * page/site content leaving the HTML pages to include just the
+ * content itself.
+ *********************************************************/
 
 body {
    font-family: "Comfortaa", cursive;
    background-color: white;
    margin: 0;
-   padding: 0 10px 10px 10px;
 }
 
-header, footer, section, div {
-   box-sizing: border-box;
-}
-
-img, embed, object, video, header {
-   max-width: 100%;
-}
-
-main {
-   max-width: 650px;
-   margin: auto;
-   background-color: white;
-   box-sizing: border-box;
-}
-
-.header {
-   background-color: grey;
-   margin-top: 10px;
-   padding: 10px;
-   text-align: left;
-   overflow: auto;
-   /*height: 100px;*/
-}
-
-.header h1 {
-   padding-bottom: 0;
-   margin-bottom: 0;
-}
-
-.header__rt {
-   float: right;
-   width: 50%;
-   text-align: right;
-}
-
-.header__rt .addBtn {
-   float: inherit;
-}
-
-.sub__header {
-   overflow: auto;
-}
-
-.logged__in {
-   font-size: small;
-   font-weight: bold;
-   padding-top: 18px;
-}
-
-.sub__header_lt {
-   float: left;
-   width: 50%;
-}
-
-.flash__message {
-   font-weight: bold;
-   color: white;
-}
-
-.side__menu {
-   width: 20%;
-   float: left;
-   margin: 0;
-   padding: 0;
-}
-
-.side__menu nav {
-   box-sizing: border-box;
-   float: left;
-   background-color: #f1f1f1;
-}
-
-.side__menu ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.side__menu li a {
-   display: block;
-   color: #000;
-   padding: 8px 16px;
-   text-decoration: none;
-}
-
-
-/* Change the link color on hover */
-
-.side__menu li:hover {
-   background-color: #555;
-   color: white;
-   transition: 0.4s;
-}
-
-.side__menu li a:hover {
-   color: white;
-   transition: 0.4s;
-}
-
-.side__menu .active {
-   background-color: #5c7ca8;
-   color: white;
-}
-
-.primary__content {
-   float: left;
-   width: 80%;
-   padding-top: 5px;
-}
-
-.primary__content ul {
-   list-style-type: none;
-   margin: 0;
-   padding: 0;
-}
-
-.content__right {
-   width: 10%;
-   float: right;
-   text-align: right;
-}
-
-.content__right a {
-   color: black;
-}
-
-.content__right a:visited {
-   color: black;
-}
-
-.content {
-   width: 88%;
-}
-
-
-/* Style the "Add" button */
-
-.addBtn {
-   padding: 10px;
-   margin-right: 5px;
-   width: 25%;
-   background: #d9d9d9;
-   color: #555;
-   float: left;
-   text-align: center;
-   font-size: 16px;
-   cursor: pointer;
-   transition: 0.4s;
-}
-
-.addBtn:hover {
-   background-color: #bbb;
+.relaxed {
+    transition: 0.4s;
 }
 
 button.accordion {
    background-color: #eee;
    color: #444;
    cursor: pointer;
-   padding: 18px;
-   width: 80%;
+   /*padding: 18px;*/
    border: none;
    text-align: left;
    outline: none;
-   font-size: 15px;
-   transition: 0.4s;
+   width: 70%;
 }
 
 button.accordion.active, button.accordion:hover {
    background-color: #ddd;
 }
 
-button.accordion:after {
+button.accordion:before {
    content: '\02795';
    /* Unicode character for "plus" sign (+) */
    font-size: 13px;
    color: #777;
-   float: right;
-   margin-left: 5px;
+   float: left;
+   margin-right: 5px;
 }
 
-button.accordion.active:after {
+button.accordion.active:before {
    content: "\2796";
    /* Unicode character for "minus" sign (-) */
 }
 
-.mgmt__menu {
-   width: 20%;
+.accordion-guts {
+  width: 70%;
 }
 
-.mgmt__menu a {
-   color: black;
+.accordion-mgmt {
+  width: 20%;
 }
 
-.mgmt__menu a:visited {
-   color: black;
+.accordion-guts-category {
+  font-variant: small-caps;
+  font-style: italic;
+  font-weight: 900;
 }
 
-div.panel {
-   padding: 0 18px;
-   background-color: white;
-   max-height: 0px;
-   overflow: hidden;
-   transition: max-height 0.2s ease-out;
+#header {
+  min-width: 320px;
 }
 
-.panel__category {
-   padding-left: 25px;
-   font-size: smaller
+#loginStatus {
+  clear: both;
 }
 
-
-/* Style the tab buttons */
-
-.tablink {
-   background-color: #555;
-   color: white;
-   float: left;
-   border: solid;
-   outline: none;
-   cursor: pointer;
-   padding: 14px 16px;
-   font-size: 17px;
-   width: 50%;
+#addItemsButton {
+  width: 10%;
 }
 
-
-/* Change background color of buttons on hover */
-
-.tablink:hover {
-   background-color: #777;
+#targetContent {
+  width: 90%;
 }
 
+#headerMenuToggle {
+  margin-top: 8px;
+}
 
-/* Set default styles for tab content */
+#authCard {
+  max-width: 30%;
+  margin: auto;
+  text-align: center
+}
+#pageGuts {
+  margin-left: 0;
+  transition: 0.4s;
+}
 
-.tabcontent {
-   color: black;
-   display: none;
-   text-align: center;
+@media only screen and (min-width: 993px) {
+  #pageGuts {
+    margin-left: 17%;
+    transition: 0.4s;
+  }
 }

@@ -13,7 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet">
     <link rel="stylesheet"
-          href="/static/css/main2.css" />
+          href="/static/css/main.css" />
 </head>
 
 <body>
@@ -29,15 +29,18 @@
             </div>
             <div id="headerBlock"
                  class="w3-container w3-col s10 m10 l10 w3-left">
-                 <div id="headerMenuToggle"
-                      class="w3-animate-opacity w3-left w3-hide-large">
-                     <button id="menuToggleButton"
-                             class="w3-button w3-large relaxed"
-                             onclick="toggleMenu()">
+                <div id="headerMenuToggle"
+                     class="w3-animate-opacity w3-left w3-hide-large">
+                    <button id="menuToggleButton"
+                            class="w3-button w3-large relaxed"
+                            onclick="toggleMenu()">
                          &#9776;
                      </button>
-                 </div>
-                <h3>Catalog APP</h3>
+                </div>
+                <h3>
+                  <a href="#"
+                     class="w3-button w3-hover-blue-gray relaxed">Catalog APP</a>
+                </h3>
             </div>
             <div id="flashMessages"
                  class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top w3-pale-green">
@@ -51,6 +54,9 @@
                 <button class="w3-bar-item w3-button w3-hide-large relaxed"
                         onclick="toggleMenu()">Close &times;
                 </button>
+                <a href="#"
+                   class="w3-bar-item w3-button relaxed">All Categories</a>
+                <div class="w3-bar-item w3-border-bottom">Categories</div>
                 <a href="#"
                    class="w3-bar-item w3-button relaxed">category</a>
                 <a href="#"
@@ -67,7 +73,8 @@
                      class="w3-right w3-right-align">
                     <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
                 </div>
-                <section id="targetContent" class="w3-left">
+                <section id="targetContent"
+                         class="w3-left">
                     <h4>All Items</h4>
                     <hr>
                     <button class="w3-button accordion relaxed">Item X</button>
@@ -77,10 +84,10 @@
                     </span>
                     <div class="w3-container w3-hide relaxed accordion-guts">
                         Description:
-                        <span class="accordion-guts-category">(category)</span><br> description description description
+                        <span class="accordion-guts-category">(category)</span><br> description description
                         description description description description description description description
                         description description description description description description description
-                        description
+                        description description
                     </div>
                 </section>
             </div>
@@ -103,10 +110,9 @@
         }
 
         function toggleMenu() {
-            if(document.getElementById("sideMenu").style.display == "block") {
+            if (document.getElementById("sideMenu").style.display == "block") {
                 document.getElementById("sideMenu").style.display = "none";
-            }
-            else {
+            } else {
                 document.getElementById("sideMenu").style.display = "block";
             }
         }

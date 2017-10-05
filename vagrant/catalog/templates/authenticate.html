@@ -8,83 +8,75 @@
           content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css?family=Comfortaa"
           rel="stylesheet">
+    <link href="https://www.w3schools.com/w3css/4/w3.css"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet">
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet"
-          href="{{url_for('static', filename='css/main.css')}}" />
-
+          href="{{url_for('static', filename='css/main.css')}}">
     <!-- Scripts for Google Sign in -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
     </script>
-    <script src="//apis.google.com/js/platform.js?onload=start"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start">
+    </script>
 </head>
 
 <body>
     <main>
-        <!-- Header -->
-        <header class="header">
-            <div class="header__rt">
+        <header id="header"
+                class="w3-container w3-row w3-blue-gray">
+            <div id="authBlock"
+                 class="w3-container w3-col s2 m2 l2 w3-right w3-right-align">
                 {% if 'username' not in session %}
-                <a href="{{url_for('showAuth')}}">
-                    <span class="addBtn">MyItems</span>
-                </a>
-                {% else %}
-                <a href="{{url_for('disconnect')}}">
-                    <span class="addBtn">Logout</span>
-                </a>
-                <div class="logged__in">logged in as {{session['username']}}</div>
+                <a href="{{url_for('showAuth')}}"
+                   class="w3-button w3-dark-gray w3-right relaxed">Login</a> {% else %}
+                <a href="{{url_for('disconnect')}}"
+                   class="w3-button w3-dark-gray w3-right relaxed">Logout</a>
+                <div id="loginStatus"
+                     class="w3-small w3-right">logged in as {{session['username']}}</div>
                 {% endif %}
             </div>
-            <h1>Catalog APP</h1>
-            <hr>
-            <div class="sub__header">
-                <div class=sub__header_lt>
-                    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
-                    <div class="flash__message">
-                        {{ message }}
-                    </div>
-                    {% endfor %} {% else %}
-                    <div class="flash__message">
-                        <br>
-                    </div>
-                    {% endif %} {% endwith %}
-                </div>
+            <div id="headerBlock"
+                 class="w3-container w3-col s10 m10 l10 w3-left">
+                <h3>
+                    <a href="{{url_for('showItems')}}"
+                       class="w3-button w3-hover-blue-gray relaxed">Catalog APP</a>
+                </h3>
+            </div>
+            <div id="flashMessages"
+                 class="w3-container w3-col s12 m12 l12 w3-left w3-left-align w3-border-top w3-pale-green">
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %} {{ message
+                }} {% endfor %} {% else %}
+                <br> {% endif %} {% endwith %}
             </div>
         </header>
-        <div class="big__div">
-
-            <!-- Side Menu -->
-            <div class="side__menu">
-                <nav>
-                  <ul>
-                    <li><a href="{{url_for('showItems')}}">home</a> {% if categories %} {% for entry in categories %}
-                        <li><a href="{{url_for('showItemsForCategory', category_id = entry.id)}}">{{entry.name}}</a></li>
-                        {% endfor %} {% endif %}
-                  </ul>
-                </nav>
-            </div>
+        <div id="pageContent"
+             class="w3-container w3-row w3-white w3-border-top w3-border-white">
             <!-- Main -->
-            <div class="primary__content">
-                <!-- Main Content -->
-
-                <section class="content">
-                    <div>
-                        Sign In with one of these services
-                        <hr>
+            <section id="authCard"
+                     class="w3-card-4">
+                <div class="w3-container w3-blue-gray">
+                    <h4>Sign in with one of these services</h4>
+                </div>
+                <div class="w3-container w3-padding-16">
+                    <div class="w3-container w3-cell w3-left">
                         <div id="signInButton">
                             <span class="g-signin"
                                   data-scope="openid email"
                                   data-clientid="694677603603-38js1mp8b07gsptfgef1l41uj7cdg6fk.apps.googleusercontent.com"
+
                                   data-redirecturi="postmessage"
                                   data-accesstype="offline"
                                   data-cookiepolicy="single_host_origin"
                                   data-callback="signInCallback"
                                   data-approvalprompt="force">
-                                 </span>
+                                   </span>
                         </div>
+                    </div>
+                    <div class="w3-container w3-cell w3-right">
                         <div class="fb-login-button"
                              data-max-rows="1"
-                             data-size="medium"
+                             data-size="large"
                              data-button-type="login_with"
                              data-show-faces="false"
                              data-auto-logout-link="false"
@@ -94,12 +86,10 @@
                             Sign In
                         </div>
                     </div>
-                    <div id="result"></div>
-                </section>
-            </div>
-            <!-- Footer -->
-            <div id="footer">
-            </div>
+                </div>
+                <div id="result"
+                     class="w3-container"></div>
+            </section>
         </div>
     </main>
     <script>
@@ -119,7 +109,8 @@
                     success: function(result) {
                         // Handle or verify the server response if necessary.
                         if (result) {
-                            $('#result').html('</br>Login Successful!</br>' + result + '</br>Redirecting...')
+                            $('#result').html('</br>Login Successful!</br>' + result +
+                                '</br>Redirecting...')
                             setTimeout(function() {
                                 window.location.href = "/catalog";
                             }, 4000);
@@ -127,7 +118,9 @@
                         } else if (authResult['error']) {
                             console.log('There was an error: ' + authResult['error']);
                         } else {
-                            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                            $('#result').html(
+                                'Failed to make a server-side call. Check your configuration and console.'
+                            );
                         }
                     }
 
@@ -174,13 +167,16 @@
                     success: function(result) {
                         // Handle or verify the server response if necessary.
                         if (result) {
-                            $('#result').html('</br>Login Successful!</br>' + result + '</br>Redirecting...')
+                            $('#result').html('</br>Login Successful!</br>' +
+                                result + '</br>Redirecting...')
                             setTimeout(function() {
                                 window.location.href = "/catalog";
                             }, 4000);
 
                         } else {
-                            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                            $('#result').html(
+                                'Failed to make a server-side call. Check your configuration and console.'
+                            );
                         }
                     }
 
@@ -190,6 +186,14 @@
 
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
+
+        function toggleMenu() {
+            if (document.getElementById("sideMenu").style.display == "block") {
+                document.getElementById("sideMenu").style.display = "none";
+            } else {
+                document.getElementById("sideMenu").style.display = "block";
+            }
+        }
     </script>
 </body>
 
