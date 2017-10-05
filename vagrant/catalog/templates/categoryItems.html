@@ -55,7 +55,7 @@
         <div id="pageContent"
              class="w3-container w3-row w3-white w3-border-top w3-border-white">
             <nav id="sideMenu"
-                 class="w3-sidebar w3-bar-block w3-collapse w3-card-2 w3-col s3 m3 l2 w3-bar-block w3-light-gray w3-animate-left">
+                 class="w3-sidebar w3-bar-block w3-collapse w3-card-2 w3-col s3 m3 l2 w3-bar-block w3-light-gray">
                 <button class="w3-bar-item w3-button w3-hide-large relaxed"
                         onclick="toggleMenu()">Close &times;
                 </button>
@@ -128,10 +128,13 @@
         }
 
         function toggleMenu() {
-            if (document.getElementById("sideMenu").style.display == "block") {
-                document.getElementById("sideMenu").style.display = "none";
+            var panel = document.getElementById("sideMenu");
+            if (panel.style.display == "block") {
+                panel.style.display = "none";
+                panel.className = panel.className.replace(" w3-animate-left", "")
             } else {
-                document.getElementById("sideMenu").style.display = "block";
+                panel.className += " w3-animate-left"
+                panel.style.display = "block";
             }
         }
     </script>

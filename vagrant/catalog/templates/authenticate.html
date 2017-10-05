@@ -29,7 +29,8 @@
                  class="w3-container w3-col s2 m2 l2 w3-right w3-right-align">
                 {% if 'username' not in session %}
                 <a href="{{url_for('showAuth')}}"
-                   class="w3-button w3-dark-gray w3-right relaxed">Login</a> {% else %}
+                   class="w3-button w3-dark-gray w3-right relaxed">Login</a>
+                {% else %}
                 <a href="{{url_for('disconnect')}}"
                    class="w3-button w3-dark-gray w3-right relaxed">Logout</a>
                 <div id="loginStatus"
@@ -107,6 +108,7 @@
                     success: function(result) {
                         // Handle or verify the server response if necessary.
                         if (result) {
+                            console.log('Successful login for: ' + result.name);
                             $('#result').html('</br>Login Successful!</br>' + result +
                                 '</br>Redirecting...')
                             setTimeout(function() {
@@ -184,14 +186,6 @@
 
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
-
-        function toggleMenu() {
-            if (document.getElementById("sideMenu").style.display == "block") {
-                document.getElementById("sideMenu").style.display = "none";
-            } else {
-                document.getElementById("sideMenu").style.display = "block";
-            }
-        }
     </script>
 </body>
 
