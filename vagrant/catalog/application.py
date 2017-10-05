@@ -241,6 +241,7 @@ def newItem():
                 print("{0} already exists with category {1}".format(
                     request.form["name"], existingItem.category))
                 flash("Failed to add item {0}".format(request.form["name"]))
+                return redirect(url_for("showItems"))
         flash("Item {0} added to the catalog".format(request.form["name"]))
         return redirect(url_for("showItems"))
     else:
