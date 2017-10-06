@@ -44,7 +44,9 @@ itemsList = (
 
 # Create a default user
 defUser = User(name="Jon Cronin", email="jonjoncronin@gmail.com",
-               picture="https://lh3.googleusercontent.com/-4efzIJndrVs/AAAAAAAAAAI/AAAAAAAAAK0/BYo3yGPBxE4/photo.jpg")
+               picture=("https://lh3.googleusercontent.com/"
+                        "-4efzIJndrVs/AAAAAAAAAAI/AAAAAAAAAK0/"
+                        "BYo3yGPBxE4/photo.jpg"))
 session.add(defUser)
 session.commit()
 

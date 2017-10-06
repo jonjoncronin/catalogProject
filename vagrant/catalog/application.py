@@ -4,8 +4,8 @@ The application.py module is a standalone module intended to act as a webserver
 hosting the site for a Catalog Item App.
 
 This Catalog Item App is intended to allow users to maintain a list of items
-that fall under a variety of categories. Both the item and the category it falls
-under are user specified.
+that fall under a variety of categories. Both the item and the category it
+falls under are user specified.
 
 Currently an item is unique even if it falls under different categories - ie
 you CANNOT have a ball under the category of baseball and a ball under the
@@ -78,14 +78,16 @@ def showItems():
     categories = session.query(Category).order_by(Category.name).all()
     items = session.query(Item).order_by(Item.name)
     users = session.query(User)
-    return render_template("items.html", items=items, categories=categories, users=users)
+    return render_template("items.html", items=items, categories=categories,
+                           users=users)
 
 
 @app.route('/catalog/category/<int:category_id>/')
 def showItemsForCategory(category_id):
     """
     Function that handles the routes to 'catalog/category/<someCategory>' and
-    will render a page that shows the items associated with a specific category.
+    will render a page that shows the items associated with a specific
+    category.
 
     Parameters
     =======================================================
@@ -101,7 +103,9 @@ def showItemsForCategory(category_id):
     items = session.query(Item).filter_by(
         category_id=category_id).order_by(Item.name)
     users = session.query(User)
-    return render_template("categoryItems.html", items=items, categories=categories, targetCategory=targetCategory, users=users)
+    return render_template("categoryItems.html",
+                           items=items, categories=categories,
+                           targetCategory=targetCategory, users=users)
 
 
 @app.route('/catalog/JSON')
@@ -227,8 +231,10 @@ def newItem():
                             request.form["name"]))
                         return redirect(url_for("showItems"))
 
-                newItem = Item(user_id=login_session["user_id"], name=request.form["name"],
-                               description=request.form["description"], category_id=existingCategory.id)
+                newItem = Item(user_id=login_session["user_id"],
+                               name=request.form["name"],
+                               description=request.form["description"],
+                               category_id=existingCategory.id)
                 try:
                     session.add(newItem)
                     session.commit()
@@ -253,7 +259,8 @@ def editItem(item_id):
     """
     Function that handles the routes to 'catalog/item/<someItem>/edit' and will
     render a page that shows the input form for editing a specific item. Due to
-    table dependencies an edit action will be processed as a delete->add action.
+    table dependencies an edit action will be processed as a delete->add
+    action.
 
     Parameters
     =======================================================
@@ -352,7 +359,7 @@ def editItem(item_id):
         return redirect(url_for("showItems"))
     else:
         return render_template("edit.html", item=editedItem,
-                                            categories=categories)
+                               categories=categories)
 
 
 @app.route('/catalog/item/<int:item_id>/delete', methods=['GET', 'POST'])
@@ -475,8 +482,9 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = (
-        "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}".format(access_token))
+    url = ("https://www.googleapis.com/"
+           "oauth2/v1/tokeninfo?access_token={0}".format(access_token))
+
     h = httplib2.Http()
     result = json.loads(h.request(url, "GET")[1])
     # If there was an error in the access token info, abort.
@@ -537,7 +545,9 @@ def gconnect():
     output += "!</h1>"
     output += '<img src="'
     output += login_session["picture"]
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;'          \
+              'border-radius:150px;-webkit-border-radius: 150px;' \
+              '-moz-border-radius: 150px;"> '
     print("done!")
     flash("{0} has the power to create".format(login_session["username"]))
     return output
@@ -567,8 +577,8 @@ def gdisconnect():
     print("In gdisconnect access token is {0}".format(access_token))
     print("User name is: ")
     print(login_session["username"])
-    url = (
-        "https://accounts.google.com/o/oauth2/revoke?token={0}".format(login_session["access_token"]))
+    url = ("https://accounts.google.com/"
+           "o/oauth2/revoke?token={0}".format(login_session["access_token"]))
     h = httplib2.Http()
     result = h.request(url, "GET")[0]
     print("result is ")
@@ -590,9 +600,9 @@ def gdisconnect():
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     """
-    Function that handles the routes to '/fbconnect/' and will process the oauth
-    session and flow with Facebook for users attempting to sign in/login to the
-    Catalog App using their Facebook credentials.
+    Function that handles the routes to '/fbconnect/' and will process the
+    oauth session and flow with Facebook for users attempting to sign in/login
+    to the Catalog App using their Facebook credentials.
 
     Parameters
     =======================================================
@@ -614,24 +624,28 @@ def fbconnect():
         "web"]["app_id"]
     app_secret = json.loads(open("fb_client_secrets.json", "r").read())[
         "web"]["app_secret"]
-    url = ("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={0}&client_secret={1}&fb_exchange_token={2}".format(
-        app_id, app_secret, access_token))
+    url = ("https://graph.facebook.com/"
+           "oauth/access_token?grant_type=fb_exchange_token"
+           "&client_id={0}&client_secret={1}&fb_exchange_token={2}".
+           format(app_id, app_secret, access_token))
+
     h = httplib2.Http()
     result = h.request(url, "GET")[1]
 
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.10/me"
 
-    # Due to the formatting for the result from the server token exchange we have to
-    # split the token first on commas and select the first index which gives us the key : value
-    # for the server access token then we split it on colons to pull out the actual token value
-    # and replace the remaining quotes with nothing so that it can be used directly in the graph
-    # api calls
+    # Due to the formatting for the result from the server token exchange we
+    # have to split the token first on commas and select the first index which
+    # gives us the key : value for the server access token then we split it on
+    # colons to pull out the actual token value  and replace the remaining
+    # quotes with nothing so that it can be used directly in the graph api
+    # calls
 
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = (
-        "https://graph.facebook.com/v2.10/me?access_token={0}&fields=name,id,email".format(token))
+    url = ("https://graph.facebook.com/"
+           "v2.10/me?access_token={0}&fields=name,id,email".format(token))
     h = httplib2.Http()
     result = h.request(url, "GET")[1]
     # print "url sent for API access:%s"% url
@@ -647,8 +661,9 @@ def fbconnect():
     login_session["access_token"] = token
 
     # Get user picture
-    url = (
-        "https://graph.facebook.com/v2.10/me/picture?access_token={0}&redirect=0&height=200&width=200".format(token))
+    url = ("https://graph.facebook.com/"
+           "v2.10/me/picture?access_token={0}"
+           "&redirect=0&height=200&width=200".format(token))
     h = httplib2.Http()
     result = h.request(url, "GET")[1]
     data = json.loads(result)
@@ -668,7 +683,9 @@ def fbconnect():
     output += "!</h1>"
     output += '<img src="'
     output += login_session["picture"]
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;'           \
+              'border-radius: 150px;-webkit-border-radius: 150px;' \
+              '-moz-border-radius: 150px;"> '
 
     flash("{0} has the power to create".format(login_session["username"]))
     return output
@@ -691,8 +708,9 @@ def fbdisconnect():
     facebook_id = login_session["facebook_id"]
     # The access token must me included to successfully logout
     access_token = login_session["access_token"]
-    url = (
-        "https://graph.facebook.com/{0}/permissions?access_token={1}".format(facebook_id, access_token))
+    url = ("https://graph.facebook.com/"
+           "{0}/permissions?access_token={1}".
+           format(facebook_id, access_token))
     h = httplib2.Http()
     result = h.request(url, "DELETE")[1]
     print("result is ")
@@ -767,8 +785,8 @@ def createUser(login_session):
 
 def getUserInfo(user_id):
     """
-    Function to retrieve the User object for a specific user being stored in the
-    DB.
+    Function to retrieve the User object for a specific user being stored in
+    the DB.
 
     Parameters
     =======================================================
