@@ -41,7 +41,10 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Create debug log for capturing events that happen during execution
+# Log output to file and to the console for now
 logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+consoleHandler = logging.StreamHandler()
+logging.getLogger('').addHandler(consoleHandler)
 
 app = Flask(__name__)
 
