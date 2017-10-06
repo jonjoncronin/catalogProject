@@ -26,6 +26,7 @@ import random
 import string
 import json
 import requests
+import logging
 
 
 # Store off Google CLIENT_ID and APPLICATION_NAME
@@ -38,6 +39,9 @@ engine = create_engine("sqlite:///catalog.db")
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+# Create debug log for capturing events that happen during execution
+logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -194,13 +198,12 @@ def newItem():
 
     categories = session.query(Category).order_by(Category.name).all()
     if request.method == "POST":
-        print(request.form)
         if request.form["name"]:
-            print("attempting to add item")
+            logging.debug("attempting to add item - {0}".
+                          format(request.form["name"]))
             try:
                 existingItem = session.query(Item).filter_by(
                     name=request.form["name"]).one()
-                print(existingItem)
             except:
                 existingItem = ""
                 pass
@@ -208,7 +211,6 @@ def newItem():
                 try:
                     existingCategory = session.query(Category).filter_by(
                         name=request.form["category"]).one()
-                    print(existingCategory)
                 except:
                     existingCategory = ""
                     pass
@@ -225,10 +227,10 @@ def newItem():
                         existingCategory = session.query(Category).filter_by(
                             name=request.form["category"]).one()
                     except:
-                        print("Unable to add {0} category to the DB".format(
-                            newCategory))
-                        flash("Failed to add item {0}".format(
-                            request.form["name"]))
+                        logging.debug("Unable to add {0} category to the DB".
+                                      format(newCategory))
+                        flash("Failed to add item {0}".
+                              format(request.form["name"]))
                         return redirect(url_for("showItems"))
 
                 newItem = Item(user_id=login_session["user_id"],
@@ -239,15 +241,18 @@ def newItem():
                     session.add(newItem)
                     session.commit()
                 except:
-                    print("Unable to add {0} item to the DB".format(newItem))
-                    flash("Failed to add item {0}".format(
-                        request.form["name"]))
+                    logging.debug("Unable to add {0} item to the DB".
+                                  format(newItem))
+                    flash("Failed to add item {0}".
+                          format(request.form["name"]))
                     pass
             else:
-                print("{0} already exists with category {1}".format(
-                    request.form["name"], existingItem.category))
+                logging.debug("{0} already exists with category {1}".
+                              format(request.form["name"],
+                                     existingItem.category))
                 flash("Failed to add item {0}".format(request.form["name"]))
                 return redirect(url_for("showItems"))
+        logging.debug("Item {0} was added".format(request.form["name"]))
         flash("Item {0} added to the catalog".format(request.form["name"]))
         return redirect(url_for("showItems"))
     else:
@@ -282,35 +287,37 @@ def editItem(item_id):
     # check to see if the current user can edit the item
     creator = getUserInfo(editedItem.user_id)
     if creator.id != login_session["user_id"]:
+        logging.debug("{0} does have permission to edit the {1} item".
+                      format(login_session["username"], item_name))
         flash("{0} does have permission to edit the {1} item".format(
             login_session["username"], item_name))
         return redirect(url_for("showItems"))
 
     if request.method == "POST":
-        print("attempting to edit an item")
-        print(request.form)
+        logging.debug("attempting to edit an item {0}".format(item_name))
 
         # remove the previous item and cleanup any empty category
         category = editedItem.category
+        logging.debug("Deleting item {0}".format(item_name))
         session.delete(editedItem)
         # now check to see if the category needs to be removed
         itemsForCat = session.query(Item.id).join(
             Category).filter_by(name=category.name)
         count = session.query(func.count(itemsForCat)).scalar()
-        print(count)
         if count == 0:
             try:
+                logging.debug("Deleting {0} from the DB".format(category.name))
                 session.delete(category)
             except:
-                print("Unable to delete {0} from the DB".format(category))
+                logging.debug("Unable to delete {0} from the DB".
+                              format(category))
                 pass
         session.commit()
 
         # add the new item and category if they don't exist
-        print("attempting to add item")
+        logging.debug("attempting to add item {0}".format(item_name))
         try:
             existingItem = session.query(Item).filter_by(name=item_name).one()
-            print(existingItem)
         except:
             existingItem = ""
             pass
@@ -318,13 +325,11 @@ def editItem(item_id):
             try:
                 existingCategory = session.query(Category).filter_by(
                     name=request.form["category"]).one()
-                print(existingCategory)
             except:
                 existingCategory = ""
                 pass
             if not existingCategory:
                 newCategory = Category(name=request.form["category"])
-                print(newCategory)
                 try:
                     session.add(newCategory)
                     # You think you need to commit this new category
@@ -335,9 +340,11 @@ def editItem(item_id):
                     # session.commit()
                     existingCategory = session.query(Category).filter_by(
                         name=request.form["category"]).one()
+                    logging.debug("New category {0} created".
+                                  format(newCategory.name))
                 except:
-                    print("Unable to add {0} category to the DB".format(
-                        newCategory))
+                    logging.debug("Unable to add {0} category to the DB".
+                                  format(newCategory))
                     flash("Failed to edit item {0}".format(item_name))
                     return redirect(url_for("showItems"))
 
@@ -348,13 +355,15 @@ def editItem(item_id):
                 session.add(newItem)
                 session.commit()
             except:
-                print("Unable to add {0} item to the DB".format(newItem))
+                logging.debug("Unable to add {0} item to the DB".
+                              format(newItem))
                 flash("Failed to edit item {0}".format(item_name))
                 pass
         else:
-            print("{0} already exists with category {1}".format(
-                item_name, existingItem.category))
+            loggin.debug("{0} already exists with category {1}".
+                         format(item_name, existingItem.category))
             flash("Failed to edit item {0}".format(item_name))
+        logging.debug("Item {0} has been editted".format(item_name))
         flash("Item {0} has been modified".format(item_name))
         return redirect(url_for("showItems"))
     else:
@@ -390,32 +399,35 @@ def deleteItem(item_id):
     # check to see if the current user can delete the item
     creator = getUserInfo(item.user_id)
     if creator.id != login_session["user_id"]:
+        logging.debug("{0} does have permission to delete the {1} item".
+                      format(login_session["username"], item_name))
         flash("{0} does have permission to delete the {1} item".format(
             login_session["username"], item_name))
         return redirect(url_for("showItems"))
 
     if request.method == "POST":
-        print("attempting to delete an item")
+        logging.debug("attempting to delete an item")
         try:
             session.delete(item)
             session.commit()
         except:
-            print("Unable to delete {0} from the DB".format(item))
+            logging.debug("Unable to delete {0} from the DB".format(item))
             flash("Failed to delete item {0}".format(item_name))
             pass
         # now check to see if the category needs to be removed
         itemsForCat = session.query(Item.id).join(
             Category).filter_by(name=category.name)
         count = session.query(func.count(itemsForCat)).scalar()
-        print(count)
         if count == 0:
             try:
                 session.delete(category)
                 session.commit()
             except:
-                print("Unable to delete {0} from the DB".format(category))
+                logging.debug("Unable to delete {0} from the DB".
+                              format(category))
                 pass
 
+        logging.debug("Item {0} has been deleted".format(item_name))
         flash("Item {0} has been removed".format(item_name))
         return redirect(url_for("showItems"))
     else:
@@ -475,6 +487,7 @@ def gconnect():
         oauth_flow.redirect_uri = "postmessage"
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
+        logging.debug("Failed to upgrade the auth code")
         response = make_response(json.dumps(
             "Failed to upgrade the authorization code."), 401)
         response.headers["Content-Type"] = "application/json"
@@ -489,6 +502,8 @@ def gconnect():
     result = json.loads(h.request(url, "GET")[1])
     # If there was an error in the access token info, abort.
     if result.get("error") is not None:
+        logging.debug("Error in the access info token")
+        logging.debug(result)
         response = make_response(json.dumps(result.get("error")), 500)
         response.headers["Content-Type"] = "application/json"
         return response
@@ -496,6 +511,7 @@ def gconnect():
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token["sub"]
     if result["user_id"] != gplus_id:
+        logging.debug("Access token from Google doesn't match user ID")
         response = make_response(json.dumps(
             "Token's user ID doesn't match given user ID."), 401)
         response.headers["Content-Type"] = "application/json"
@@ -503,15 +519,16 @@ def gconnect():
 
     # Verify that the access token is valid for this app.
     if result["issued_to"] != CLIENT_ID:
+        logging.debug("Access token clientID from Google doesn't match app's")
         response = make_response(json.dumps(
             "Token's client ID does not match app's."), 401)
-        print("Token's client ID does not match app's.")
         response.headers["Content-Type"] = "application/json"
         return response
 
     stored_access_token = login_session.get("access_token")
     stored_gplus_id = login_session.get("gplus_id")
     if stored_access_token is not None and gplus_id == stored_gplus_id:
+        logging.debug("User has already connected")
         response = make_response(json.dumps(
             "Current user is already connected."), 200)
         response.headers["Content-Type"] = "application/json"
@@ -537,6 +554,9 @@ def gconnect():
     user_id = getUserID(login_session["email"])
     if user_id is None:
         user_id = createUser(login_session)
+        logging.debug("New user signed up {0}".format(user_id))
+    else:
+        logging.debug("User {0} has connected".format(user_id))
     login_session["user_id"] = user_id
 
     output = ''
@@ -548,7 +568,6 @@ def gconnect():
     output += ' " style = "width: 300px; height: 300px;'          \
               'border-radius:150px;-webkit-border-radius: 150px;' \
               '-moz-border-radius: 150px;"> '
-    print("done!")
     flash("{0} has the power to create".format(login_session["username"]))
     return output
 
@@ -571,30 +590,18 @@ def gdisconnect():
     """
     access_token = login_session.get("access_token")
     if access_token is None:
-        print("Access Token is None")
+        logging.debug("Access Token is None")
         flash("There was an issue logging out")
         return redirect(url_for("showItems"))
-    print("In gdisconnect access token is {0}".format(access_token))
-    print("User name is: ")
-    print(login_session["username"])
+    logging.debug("In gdisconnect access token is {0}".format(access_token))
+    logging.debug("User name is: ")
+    logging.debug(login_session["username"])
     url = ("https://accounts.google.com/"
            "o/oauth2/revoke?token={0}".format(login_session["access_token"]))
     h = httplib2.Http()
     result = h.request(url, "GET")[0]
-    print("result is ")
-    print(result)
-    # return "you have been logged out"
+    logging.debug("result is {0}".format(result))
     return
-    # if result["status"] == "200":
-    #     # del login_session["access_token"]
-    #     # del login_session["gplus_id"]
-    #     # del login_session["username"]
-    #     # del login_session["email"]
-    #     # del login_session["picture"]
-    #     return redirect(url_for("showItems"))
-    # else:
-    #     flash("There was an issue logging out")
-    #     return redirect(url_for("showItems"))
 
 
 @app.route('/fbconnect', methods=['POST'])
@@ -614,11 +621,12 @@ def fbconnect():
     authenticate.html page to indicate success or failure.
     """
     if request.args.get("state") != login_session["state"]:
+        logging.debug("Invalid state parameter")
         response = make_response(json.dumps("Invalid state parameter."), 401)
         response.headers["Content-Type"] = "application/json"
         return response
     access_token = request.data
-    print("access token received {0} ".format(access_token))
+    logging.debug("access token received {0} ".format(access_token))
 
     app_id = json.loads(open("fb_client_secrets.json", "r").read())[
         "web"]["app_id"]
@@ -648,10 +656,8 @@ def fbconnect():
            "v2.10/me?access_token={0}&fields=name,id,email".format(token))
     h = httplib2.Http()
     result = h.request(url, "GET")[1]
-    # print "url sent for API access:%s"% url
-    # print "API JSON result: %s" % result
     data = json.loads(result)
-    print(data)
+    logging.debug(data)
     login_session["provider"] = "facebook"
     login_session["username"] = data["name"]
     login_session["email"] = data["email"]
@@ -674,6 +680,10 @@ def fbconnect():
     user_id = getUserID(login_session["email"])
     if user_id is None:
         user_id = createUser(login_session)
+        logging.debug("New user signed up {0}".format(user_id))
+    else:
+        logging.debug("User {0} has connected".format(user_id))
+
     login_session["user_id"] = user_id
 
     output = ""
@@ -713,9 +723,7 @@ def fbdisconnect():
            format(facebook_id, access_token))
     h = httplib2.Http()
     result = h.request(url, "DELETE")[1]
-    print("result is ")
-    print(result)
-    # return "you have been logged out"
+    logging.debug("result is {0}".format(result))
     return
 
 
@@ -735,8 +743,9 @@ def disconnect():
     =======================================================
     A response object to redirect the user to the items.html page.
     """
-    print login_session
     if "provider" in login_session:
+        logging.debug("User {0} is logging out".
+                      format(login_session["user_id"]))
         if login_session["provider"] == "google":
             gdisconnect()
             del login_session["gplus_id"]
@@ -752,6 +761,7 @@ def disconnect():
         flash("You are a mere mortal")
         return redirect(url_for("showItems"))
     else:
+        logging.debug("None auth'd user attempting to logout")
         flash("You were not logged in")
         return redirect(url_for("showItems"))
 
